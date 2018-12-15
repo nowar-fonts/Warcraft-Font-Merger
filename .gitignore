@@ -1,3 +1,2 @@
-*.exe
-*.ttf
-*/*.bat
+/bin/merge-otd.exe
+/release
