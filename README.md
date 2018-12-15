@@ -1,6 +1,6 @@
 # 魔兽世界字体合并/补全工具<br>(Warcraft Font Merger, aka “WFM”)
 
-## 快速入门：
+## 快速入门
 
 下载[最新版](https://github.com/CyanoHao/Warcraft-Font-Merger/releases/latest)的字体合并补全工具并解压缩。
 
