@@ -1,5 +1,6 @@
 #include <windows.h>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <fstream>
@@ -7,6 +8,7 @@
 #include <streambuf>
 #include <string>
 
+#include "invisible.hpp"
 #include "json.hpp"
 
 const wchar_t *usage = L"用法：\n\t%ls 1.otd 2.otd [n.otd ...]\n";
@@ -85,6 +87,31 @@ void MergeFont(json &base, json &ext) {
 	}
 }
 
+void RemoveBlankGlyph(json &font) {
+	static UnicodeInvisible invisible;
+	std::vector<std::string> eraseList;
+
+	for (json::iterator it = font["cmap"].begin(); it != font["cmap"].end();
+	     ++it) {
+		if (!invisible.CanBeInvisible(std::stoi(it.key()))) {
+			std::string name = it.value();
+			auto &glyph = font["glyf"][name];
+			if (glyph.find("contours") == glyph.end() &&
+			    glyph.find("references") == glyph.end())
+				eraseList.push_back(it.key());
+		}
+	}
+
+	for (auto g : eraseList) {
+		std::string name = font["cmap"][g];
+		font["cmap"].erase(g);
+		if (std::find_if(font["cmap"].begin(), font["cmap"].end(),
+		                 [name](auto v) { return v == name; }) ==
+		    font["cmap"].end())
+			font["glyf"].erase(name);
+	}
+}
+
 int main(void) {
 	int argc;
 	wchar_t **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
@@ -102,6 +129,7 @@ int main(void) {
 	} catch (std::runtime_error) {
 		return EXIT_FAILURE;
 	}
+	RemoveBlankGlyph(base);
 
 	for (int argi = 2; argi < argc; argi++) {
 		json ext;
@@ -111,6 +139,7 @@ int main(void) {
 		} catch (std::runtime_error) {
 			return EXIT_FAILURE;
 		}
+		RemoveBlankGlyph(ext);
 		MergeFont(base, ext);
 	}
 

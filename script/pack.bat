@@ -1,6 +1,9 @@
+@echo off
+
 %~d0
 cd "%~dp0"
 
+if exist Fonts rmdir /s /q Fonts
 mkdir Fonts
 
 copy %1 Fonts\FRIZQT__.ttf
@@ -26,4 +29,5 @@ copy %1 Fonts\2002B.ttf
 copy %1 Fonts\K_Damage.ttf
 copy %1 Fonts\K_Pagetext.ttf
 
+@echo on
 pause
