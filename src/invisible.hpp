@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 
 constexpr static int UnicodeInvisibleList[] = {

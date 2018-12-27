@@ -149,7 +149,7 @@ int main(int argc, char *u8argv[]) {
 		MergeFont(base, ext);
 	}
 
-	std::ofstream outfile(u8argv[1]);
+	nowide::ofstream outfile(u8argv[1]);
 	outfile << base.dump() << std::endl;
 	return 0;
 }
