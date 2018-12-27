@@ -41,39 +41,45 @@
 ## 限制
 
 * 目前只支持 TrueType 曲线字体（TrueType 或 OpenType/TT，扩展名通常为 `.ttf`），暂不支持 PostScript 曲线字体（OpenType/CFF 或 OpenType/CID，扩展名通常为 `.otf`）。
-* 不提供 32 位版本。WFM 的设计目标是为魔兽世界玩家提供一个字体补全工具，以避免自定义的字体在游戏中出现缺字现象。汉字是一个非常庞大的集合，读取并操作汉字需要巨大的内存，远远超出 32 位程序的内存上限。
+* 不提供预编译的 32 位版本。WFM 不可避免地需要操纵汉字，而汉字是一个非常庞大的集合，读取并操作汉字需要巨大的内存，32 位程序极易因为超出内存上限而崩溃。
 
 ## 编译和运行
 
-### 编译（需要 MinGW GCC）
+### 编译
 
+用 GCC
 ```bash
-g++ merge-otd.cpp -O2 -o merge-otd.exe
+g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++14 -O2 -o merge-otd
+```
+
+或者用 Visual C++
+```cmd
+cl src\merge-otd.cpp src\iostream.cpp /Isrc\ /std:c++14 /EHsc /O2 /Fe:merge-otd.exe
 ```
 
 ### 运行（需要 [otfcc](https://github.com/caryll/otfcc)）
 
 合并两个字体：
-```bat
+```bash
 otfccdump 西文字体.ttf -o base.otd
 otfccdump 中文字体.ttf -o cjk.otd
 merge-otd base.otd cjk.otd
 otfccbuild base.otd -O2 -o 合并之后的字体.ttf
-del *.otd
+rm *.otd
 ```
 
 补全缺字的字体：
-```bat
+```bash
 otfccdump 需要补全的字体.ttf -o base.otd
 otfccdump 收字很全的西文字体.ttf -o latin.otd
 otfccdump 收字很全的中文字体.ttf -o cjk.otd
 merge-otd base.otd latin.otd cjk.otd
 otfccbuild base.otd -O2 -o 补全之后的字体.ttf
-del *.otd
+rm *.otd
 ```
 
 合并字体文件的数量原则上只受底层限制（命令行参数、内存、OpenType 字符数量等）：
-```bat
+```bash
 otfccdump 基本拉丁字母.ttf -o base.otd
 otfccdump 扩展拉丁字母.ttf -o 1.otd
 otfccdump 希腊字母.ttf     -o 2.otd
@@ -85,7 +91,7 @@ otfccdump 谚文.ttf         -o 7.otd
 otfccdump 其他CJK符号.ttf  -o 8.otd
 merge-otd base.otd 1.otd 2.otd 3.otd 4.otd 5.otd 6.otd 7.otd 8.otd
 otfccbuild base.otd -O2 -o 合并之后的字体.ttf
-del *.otd
+rm *.otd
 ```
 
 ## 开发计划

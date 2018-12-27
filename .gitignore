@@ -1,2 +1,4 @@
+/.vscode
 /bin/merge-otd.exe
+/bin32/merge-otd.exe
 /release

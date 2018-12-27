@@ -1,25 +1,32 @@
-#include <windows.h>
+﻿#ifdef _MSC_VER
+#pragma comment(lib, "shell32")
+#endif
 
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
-#include <fstream>
-#include <iostream>
 #include <streambuf>
 #include <string>
+
+#include <nowide/args.hpp>
+#include <nowide/cstdio.hpp>
+#include <nowide/fstream.hpp>
+#include <nowide/iostream.hpp>
 
 #include "invisible.hpp"
 #include "json.hpp"
 
-const wchar_t *usage = L"用法：\n\t%ls 1.otd 2.otd [n.otd ...]\n";
-const wchar_t *loadfilefail = L"读取文件 %ls 失败\n";
+const char *usage = u8"用法：\n\t%ls 1.otd 2.otd [n.otd ...]\n";
+const char *loadfilefail = u8"读取文件 %ls 失败\n";
 
 using json = nlohmann::json;
 
-std::string LoadFile(wchar_t *filename) {
-	std::ifstream file(filename);
-	if (!file.is_open()) {
-		fwprintf(stderr, loadfilefail, filename);
+std::string LoadFile(char *u8filename) {
+	static char u8buffer[4096];
+	nowide::ifstream file(u8filename);
+	if (!file) {
+		snprintf(u8buffer, sizeof u8buffer, loadfilefail, u8filename);
+		nowide::cerr << u8buffer << std::endl;
 		throw std::runtime_error("failed to load file");
 	}
 	std::string result{std::istreambuf_iterator<char>(file),
@@ -112,19 +119,18 @@ void RemoveBlankGlyph(json &font) {
 	}
 }
 
-int main(void) {
-	int argc;
-	wchar_t **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-
-	setlocale(LC_ALL, "");
+int main(int argc, char *u8argv[]) {
+	static char u8buffer[4096];
+	nowide::args _{argc, u8argv};
 
 	if (argc < 3) {
-		wprintf(usage, argv[0]);
+		snprintf(u8buffer, sizeof u8buffer, usage, u8argv[0]);
+		nowide::cout << u8buffer << std::endl;
 	}
 
 	json base;
 	try {
-		auto s = LoadFile(argv[1]);
+		auto s = LoadFile(u8argv[1]);
 		base = json::parse(s);
 	} catch (std::runtime_error) {
 		return EXIT_FAILURE;
@@ -134,7 +140,7 @@ int main(void) {
 	for (int argi = 2; argi < argc; argi++) {
 		json ext;
 		try {
-			auto s = LoadFile(argv[argi]);
+			auto s = LoadFile(u8argv[argi]);
 			ext = json::parse(s);
 		} catch (std::runtime_error) {
 			return EXIT_FAILURE;
@@ -143,7 +149,7 @@ int main(void) {
 		MergeFont(base, ext);
 	}
 
-	std::ofstream outfile(argv[1]);
+	std::ofstream outfile(u8argv[1]);
 	outfile << base.dump() << std::endl;
 	return 0;
 }
