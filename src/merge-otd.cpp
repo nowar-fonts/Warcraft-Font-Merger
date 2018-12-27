@@ -18,6 +18,7 @@
 
 const char *usage = u8"用法：\n\t%s 1.otd 2.otd [n.otd ...]\n";
 const char *loadfilefail = u8"读取文件 %s 失败\n";
+const char *mixedpostscript = u8"暂不支持混用 TrueType 和 PostScript 轮廓字体";
 
 using json = nlohmann::json;
 
@@ -32,6 +33,10 @@ std::string LoadFile(char *u8filename) {
 	std::string result{std::istreambuf_iterator<char>(file),
 	                   std::istreambuf_iterator<char>()};
 	return result;
+}
+
+bool IsPostScriptOutline(json &font) {
+	return font.find("CFF_") != font.end() || font.find("CFF2") != font.end();
 }
 
 // x' = a x + b y + dx
@@ -126,15 +131,18 @@ int main(int argc, char *u8argv[]) {
 	if (argc < 3) {
 		snprintf(u8buffer, sizeof u8buffer, usage, u8argv[0]);
 		nowide::cout << u8buffer << std::endl;
+		return EXIT_FAILURE;
 	}
 
 	json base;
+	bool basecff;
 	try {
 		auto s = LoadFile(u8argv[1]);
 		base = json::parse(s);
 	} catch (std::runtime_error) {
 		return EXIT_FAILURE;
 	}
+	basecff = IsPostScriptOutline(base);
 	RemoveBlankGlyph(base);
 
 	for (int argi = 2; argi < argc; argi++) {
@@ -145,11 +153,16 @@ int main(int argc, char *u8argv[]) {
 		} catch (std::runtime_error) {
 			return EXIT_FAILURE;
 		}
+		if (IsPostScriptOutline(ext) != basecff) {
+			nowide::cerr << mixedpostscript << std::endl;
+			return EXIT_FAILURE;
+		}
 		RemoveBlankGlyph(ext);
 		MergeFont(base, ext);
 	}
 
-	nowide::ofstream outfile(u8argv[1]);
-	outfile << base.dump() << std::endl;
+	std::string out = base.dump();
+	FILE *outfile = nowide::fopen(u8argv[1], "wb");
+	fwrite(out.c_str(), 1, out.size(), outfile);
 	return 0;
 }
