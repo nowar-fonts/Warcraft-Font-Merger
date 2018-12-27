@@ -16,8 +16,8 @@
 #include "invisible.hpp"
 #include "json.hpp"
 
-const char *usage = u8"用法：\n\t%ls 1.otd 2.otd [n.otd ...]\n";
-const char *loadfilefail = u8"读取文件 %ls 失败\n";
+const char *usage = u8"用法：\n\t%s 1.otd 2.otd [n.otd ...]\n";
+const char *loadfilefail = u8"读取文件 %s 失败\n";
 
 using json = nlohmann::json;
 
