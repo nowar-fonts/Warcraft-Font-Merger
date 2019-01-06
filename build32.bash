@@ -1,4 +1,4 @@
-VERSION=0.2.1-32bit
+VERSION=0.2.2-32bit
 
 i686-w64-mingw32-g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++14 -O3 -static -Wl,--large-address-aware -o bin32/merge-otd.exe
 strip bin32/merge-otd.exe
@@ -18,8 +18,8 @@ cp ../script/comp.bat $R/补全.bat
 cp ../script/merge.bat $R/合并.bat
 cp ../script/merge+comp.bat $R/合并补全.bat
 cp ../script/pack-zh.bat $R/打包.bat
-cp ../font/SourceHanSansCN-Medium.ttf $R/cjk.ttf
-cp ../font/NotoSans-SemiCondensedMedium.ttf $R/latin.ttf
+cp ../font/Nowar-Sans-CJK-CN-Medium.ttf $R/cjk.ttf
+cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
 
 7z a -mx -myx -ms=on WarFontMerger-SC2-$VERSION.7z $R/
 rar a -ma5 -m5 -s $R.rar $R/

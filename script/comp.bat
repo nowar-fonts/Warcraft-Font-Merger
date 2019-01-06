@@ -7,7 +7,7 @@ cd "%~dp0"
 
 .\merge-otd.exe base.otd latin.otd cjk.otd
 
-.\otfccbuild -O3 -o out.ttf base.otd
+.\otfccbuild.exe -O3 -o out.ttf base.otd
 
 del base.otd latin.otd cjk.otd
 
