@@ -1,6 +1,6 @@
 VERSION=0.2.1-32bit
 
-i686-w64-mingw32-g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++14 -O3 -static -o bin32/merge-otd.exe
+i686-w64-mingw32-g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++14 -O3 -static -Wl,--large-address-aware -o bin32/merge-otd.exe
 strip bin32/merge-otd.exe
 
 mkdir -p release
