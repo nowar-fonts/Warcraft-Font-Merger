@@ -125,7 +125,7 @@ def AddRef(n, font, ref):
 			AddRef(r['glyph'], font, ref)
 
 def TrimGlyph(font):
-	needed = []
+	needed = [ font['glyph_order'][0] ]
 	for (_, n) in font['cmap'].items():
 		needed.append(n)
 	ref = []
