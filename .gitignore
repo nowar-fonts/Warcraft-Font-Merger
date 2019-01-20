@@ -1,6 +1,5 @@
 /.vscode
 /font-builder/src/*.otd
 /font-builder/out
-/bin/merge-otd.exe
-/bin32/merge-otd.exe
+/bin-win*/merge-otd.exe
 /release

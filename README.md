@@ -52,12 +52,12 @@
 
 用 GCC
 ```bash
-g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++14 -O2 -o merge-otd
+g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++17 -O2 -o merge-otd
 ```
 
 或者用 Visual C++
 ```cmd
-cl src\merge-otd.cpp src\iostream.cpp /Isrc\ /std:c++14 /EHsc /O2 /Fe:merge-otd.exe
+cl src\merge-otd.cpp src\iostream.cpp /Isrc\ /std:c++17 /EHsc /O2 /Fe:merge-otd.exe
 ```
 
 ### 运行（需要 [otfcc](https://github.com/caryll/otfcc)）
@@ -66,7 +66,7 @@ cl src\merge-otd.cpp src\iostream.cpp /Isrc\ /std:c++14 /EHsc /O2 /Fe:merge-otd.
 ```bash
 otfccdump 西文字体.ttf -o base.otd
 otfccdump 中文字体.ttf -o cjk.otd
-merge-otd base.otd cjk.otd
+./merge-otd base.otd cjk.otd
 otfccbuild base.otd -O2 -o 合并之后的字体.ttf
 rm *.otd
 ```
@@ -76,7 +76,7 @@ rm *.otd
 otfccdump 需要补全的字体.ttf -o base.otd
 otfccdump 收字很全的西文字体.ttf -o latin.otd
 otfccdump 收字很全的中文字体.ttf -o cjk.otd
-merge-otd base.otd latin.otd cjk.otd
+./merge-otd base.otd latin.otd cjk.otd
 otfccbuild base.otd -O2 -o 补全之后的字体.ttf
 rm *.otd
 ```
@@ -92,7 +92,7 @@ otfccdump 基本汉字.ttf     -o 5.otd
 otfccdump 扩展汉字.ttf     -o 6.otd
 otfccdump 谚文.ttf         -o 7.otd
 otfccdump 其他CJK符号.ttf  -o 8.otd
-merge-otd base.otd 1.otd 2.otd 3.otd 4.otd 5.otd 6.otd 7.otd 8.otd
+./merge-otd base.otd 1.otd 2.otd 3.otd 4.otd 5.otd 6.otd 7.otd 8.otd
 otfccbuild base.otd -O2 -o 合并之后的字体.ttf
 rm *.otd
 ```

@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <streambuf>
 #include <string>
+#include <vector>
 
 #include <nowide/args.hpp>
 #include <nowide/cstdio.hpp>
@@ -124,6 +125,21 @@ void RemoveBlankGlyph(json &font) {
 	}
 }
 
+json MergeCodePage(std::vector<json> cpranges) {
+	json result = json::object();
+
+	for (auto &cprange : cpranges)
+		for (auto &[k, v] : cprange.items()) {
+			// std::cerr << cprange << ' ' << k << std::endl;
+			if (result.find(k) != result.end())
+				result[k] = result[k] || v;
+			else
+				result[k] = v;
+		}
+
+	return result;
+}
+
 int main(int argc, char *u8argv[]) {
 	static char u8buffer[4096];
 	nowide::args _{argc, u8argv};
@@ -133,6 +149,8 @@ int main(int argc, char *u8argv[]) {
 		nowide::cout << u8buffer << std::endl;
 		return EXIT_FAILURE;
 	}
+
+	std::vector<json> ulCodePageRanges1, ulCodePageRanges2;
 
 	json base;
 	bool basecff;
@@ -159,6 +177,24 @@ int main(int argc, char *u8argv[]) {
 		}
 		RemoveBlankGlyph(ext);
 		MergeFont(base, ext);
+		if (ext.find("OS_2") != ext.end()) {
+			auto &OS_2 = ext["OS_2"];
+			if (OS_2.find("ulCodePageRange1") != OS_2.end())
+				ulCodePageRanges1.push_back(OS_2["ulCodePageRange1"]);
+			if (OS_2.find("ulCodePageRange2") != OS_2.end())
+				ulCodePageRanges2.push_back(OS_2["ulCodePageRange2"]);
+		}
+	}
+
+	if (base.find("OS_2") != base.end()) {
+		auto &OS_2 = base["OS_2"];
+		if (OS_2.find("ulCodePageRange1") != OS_2.end())
+			ulCodePageRanges1.push_back(OS_2["ulCodePageRange1"]);
+		if (OS_2.find("ulCodePageRange2") != OS_2.end())
+			ulCodePageRanges2.push_back(OS_2["ulCodePageRange2"]);
+
+		OS_2["ulCodePageRange1"] = MergeCodePage(ulCodePageRanges1);
+		OS_2["ulCodePageRange2"] = MergeCodePage(ulCodePageRanges2);
 	}
 
 	std::string out = base.dump();
