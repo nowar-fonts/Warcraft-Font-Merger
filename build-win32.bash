@@ -1,6 +1,8 @@
 #! /bin/bash
 
-VERSION=0.2.3-32bit
+source ./version.bash
+
+VERSION=$VERSION-win32
 
 i686-w64-mingw32-g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -Wl,--large-address-aware -o bin-win32/merge-otd.exe
 strip bin-win32/merge-otd.exe

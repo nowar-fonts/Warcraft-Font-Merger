@@ -66,14 +66,14 @@ void Transform(json &glyph, double a, double b, double c, double d, double dx,
 		}
 }
 
-// copy referenced glyphs recursively
-void CopyRef(json &glyph, json &base, json &ext) {
+// move referenced glyphs recursively
+void MoveRef(json &glyph, json &base, json &ext) {
 	if (glyph.find("references") != glyph.end())
 		for (auto &r : glyph["references"]) {
 			std::string name = r["glyph"];
 			if (base["glyf"].find(name) == base["glyf"].end()) {
-				base["glyf"][name] = ext["glyf"][name];
-				CopyRef(base["glyf"][name], base, ext);
+				base["glyf"][name] = std::move(ext["glyf"][name]);
+				MoveRef(base["glyf"][name], base, ext);
 			}
 		}
 }
@@ -93,8 +93,8 @@ void MergeFont(json &base, json &ext) {
 			std::string name = *it;
 			base["cmap"][it.key()] = ext["cmap"][it.key()];
 			if (base["glyf"].find(name) == base["glyf"].end()) {
-				base["glyf"][name] = ext["glyf"][name];
-				CopyRef(base["glyf"][name], base, ext);
+				base["glyf"][name] = std::move(ext["glyf"][name]);
+				MoveRef(base["glyf"][name], base, ext);
 			}
 		}
 	}
