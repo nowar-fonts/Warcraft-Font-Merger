@@ -9,6 +9,7 @@ wait
 mkdir -p out
 
 python trim-droid.py &
+python trim-roboto.py Regular $ver &
 python trim-noto.py Medium $ver &
 python trim-shs-cn.py CN Medium gbk $ver &
 python trim-shs.py SC Medium gbk $ver &

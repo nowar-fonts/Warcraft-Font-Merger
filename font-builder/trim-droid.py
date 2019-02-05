@@ -83,7 +83,7 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 13,
-			"nameString": "Licensed under the Apache License, Version 2.0"
+			"nameString": "Licensed under the Apache License, Version 2.0."
 		},
 		{
 			"platformID": 3,
@@ -142,7 +142,7 @@ def TrimGlyph(font):
 
 if __name__ == '__main__':
 
-	with open("src/NotoSans-SemiCondensedMedium.otd", 'rb') as latinFile:
+	with open("src/Roboto-Regular.otd", 'rb') as latinFile:
 		latinFont = json.loads(latinFile.read().decode('UTF-8', errors='replace'))
 
 	# quotes, em-dash and ellipsis

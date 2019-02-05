@@ -23,7 +23,7 @@ cp ../script-windows/merge.bat $R/合并.bat
 cp ../script-windows/merge+comp.bat $R/合并补全.bat
 cp ../script-windows/pack-zh.bat $R/打包.bat
 cp ../font/Nowar-Sans-CJK-XS-Regular.ttf $R/cjk.ttf
-cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
+cp ../font/Nowar-Neo-Sans-LCG-Regular.ttf $R/latin.ttf
 
 7z a -mx -myx -ms=on WarFontMerger-SC1-$VERSION.7z $R/
 rar a -ma5 -m5 -s $R.rar $R/

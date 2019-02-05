@@ -463,5 +463,23 @@ json MergeNameTable(const vector<json> &nametables) {
 		}
 	}
 
+	if (GetNameEntry(result, NameId::LicenseDescription) == "")
+		result.push_back({
+		    {"platformID", Platform::Windows},
+			{"encodingID", Encoding::Unicode},
+			{"languageID", Language::en_US},
+			{"nameID", NameId::LicenseDescription},
+			{"nameString", license},
+		});
+
+	if (GetNameEntry(result, NameId::Copyright) == "")
+		result.push_back({
+		    {"platformID", Platform::Windows},
+			{"encodingID", Encoding::Unicode},
+			{"languageID", Language::en_US},
+			{"nameID", NameId::Copyright},
+			{"nameString", copyright},
+		});
+
 	return result;
 }
