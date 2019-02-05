@@ -4,7 +4,7 @@ source ./version.bash
 
 VERSION=$VERSION-win64
 
-x86_64-w64-mingw32-g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -o bin-win64/merge-otd.exe
+x86_64-w64-mingw32-g++ src/merge-otd.cpp src/merge-name.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -o bin-win64/merge-otd.exe
 strip bin-win64/merge-otd.exe
 
 mkdir -p release

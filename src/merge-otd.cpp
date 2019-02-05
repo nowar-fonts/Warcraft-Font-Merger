@@ -16,6 +16,7 @@
 #include <nowide/iostream.hpp>
 
 #include "invisible.hpp"
+#include "merge-name.h"
 
 const char *usage = u8"用法：\n\t%s 1.otd 2.otd [n.otd ...]\n";
 const char *loadfilefail = u8"读取文件 %s 失败\n";
@@ -151,6 +152,7 @@ int main(int argc, char *u8argv[]) {
 	}
 
 	std::vector<json> ulCodePageRanges1, ulCodePageRanges2;
+	std::vector<json> nametables;
 
 	json base;
 	bool basecff;
@@ -162,6 +164,7 @@ int main(int argc, char *u8argv[]) {
 	}
 	basecff = IsPostScriptOutline(base);
 	RemoveBlankGlyph(base);
+	nametables.push_back(base["name"]);
 
 	for (int argi = 2; argi < argc; argi++) {
 		json ext;
@@ -176,6 +179,7 @@ int main(int argc, char *u8argv[]) {
 			return EXIT_FAILURE;
 		}
 		RemoveBlankGlyph(ext);
+		nametables.push_back(ext["name"]);
 		MergeFont(base, ext);
 		if (ext.find("OS_2") != ext.end()) {
 			auto &OS_2 = ext["OS_2"];
@@ -196,6 +200,8 @@ int main(int argc, char *u8argv[]) {
 		OS_2["ulCodePageRange1"] = MergeCodePage(ulCodePageRanges1);
 		OS_2["ulCodePageRange2"] = MergeCodePage(ulCodePageRanges2);
 	}
+
+	base["name"] = MergeNameTable(nametables);
 
 	std::string out = base.dump();
 	FILE *outfile = nowide::fopen(u8argv[1], "wb");
