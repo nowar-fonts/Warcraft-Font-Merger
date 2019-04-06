@@ -1,5 +1,7 @@
+.DS_Store
 /.vscode
 /font-builder/src/*.otd
 /font-builder/out
 /bin-win*/merge-otd.exe
+/bin-mac64/merge-otd
 /release

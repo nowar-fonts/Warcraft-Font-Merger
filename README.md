@@ -1,10 +1,10 @@
 # 魔兽世界字体合并/补全工具<br>(Warcraft Font Merger, aka “WFM”)
 
-## 快速入门
+## 下载地址
 
 下载[最新版](https://github.com/CyanoHao/Warcraft-Font-Merger/releases/latest)的字体合并补全工具并解压缩。
 
-字体合并补全工具有 5 个版本，各个版本的自带字库不同。
+字体合并补全工具 Windows 和 macOS 各有 5 个版本，各个版本的自带字库不同。
 * `WarFontMerger-SC1-版本号.7z`：简体中文压缩字库（覆盖 GB18030，字体文件采用压缩技术，体积小但字形质量一般）。
 * `WarFontMerger-SC2-版本号.7z`：简体中文标准字库（覆盖 GB18030，字形质量较好，**推荐**）。
 * `WarFontMerger-SC3-版本号.7z`：简体中文大字库（覆盖中日韩各国字符，字形和标准字库一致，体积稍大）。
@@ -12,6 +12,8 @@
 * `WarFontMerger-Classic-版本号.7z`：传统字形大字库（覆盖中日韩各国字符，字形采用传统印刷体风格，体积稍大）。
 
 除了合并补全工具自带的字体库之外，[WMF 开源字体库](https://github.com/CyanoHao/WFM-Free-Font) 中的字体也经过验证可以用于该工具。
+
+## 快速入门（Windows）
 
 ### 合并两个字体并补全
 
@@ -35,6 +37,17 @@
 
 打开字体合并补全工具文件夹，把准备好的字体拖动到 `打包.bat` 上，然后将生成的 `Fonts` 文件夹移动到 `World of Warcraft\_retail_\` 下面。
 
+## 快速入门（macOS）
+
+macOS 下的使用方法和 Windows 稍有不同。
+
+首先双击打开相应的 `.command` 文件，然后依次按照提示将字体文件拖动到命令窗口中，并按回车键确认。
+
+等候片刻即可得到补全完成的字体 `out.ttf`。
+
+操作示意：
+![macOS 操作示意](image/mac.png)
+
 ## 特性
 
 * 轻量级：三个可执行文件，总共只有 2 MB 多一点。自带字库的压缩包不超过 10 MB。
@@ -50,7 +63,7 @@
 
 ### 编译
 
-用 GCC
+用 GCC 或 Clang
 ```bash
 g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++17 -O2 -o merge-otd
 ```
