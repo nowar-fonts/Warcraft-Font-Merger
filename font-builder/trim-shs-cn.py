@@ -1,6 +1,7 @@
 import sys
 import json
 
+from common import TrimGlyph, RegionSubfamilyMap
 
 def NameFont(font, region, weight, version):
 
@@ -20,7 +21,7 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 1,
-			"nameString": "Nowar Sans (漢字 and 仮名) {}".format(region) if isStdStyle else "Nowar Sans (漢字 and 仮名) {} {}".format(region, weight)
+			"nameString": "Nowar Sans CJK {}".format(region) if isStdStyle else "Nowar Sans CJK {} {}".format(region, weight)
 		},
 		{
 			"platformID": 3,
@@ -34,14 +35,14 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 3,
-			"nameString": "Nowar Sans (漢字 and 仮名) {} {} {}".format(region, weight, version)
+			"nameString": "Nowar Sans CJK {} {} {}".format(region, weight, version)
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 4,
-			"nameString": "Nowar Sans (漢字 and 仮名) {} {}".format(region, weight)
+			"nameString": "Nowar Sans CJK {} {}".format(region, weight)
 		},
 		{
 			"platformID": 3,
@@ -97,7 +98,7 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 16,
-			"nameString": "Nowar Sans (漢字 and 仮名) {}".format(region)
+			"nameString": "Nowar Sans CJK {}".format(region)
 		},
 		{
 			"platformID": 3,
@@ -107,31 +108,6 @@ def NameFont(font, region, weight, version):
 			"nameString": weight
 		},
 	]
-
-def AddRef(n, font, ref):
-	if n in ref:
-		return
-	glyph = font['glyf'][n]
-	if 'references' in glyph:
-		for r in glyph['references']:
-			ref.append(r['glyph'])
-			AddRef(r['glyph'], font, ref)
-
-def TrimGlyph(font):
-	needed = [ font['glyph_order'][0] ]
-	for (_, n) in font['cmap'].items():
-		needed.append(n)
-	ref = []
-	for n in needed:
-		AddRef(n, font, ref)
-
-	unneeded = []
-	for n in font['glyf']:
-		if not (n in needed or n in ref):
-			unneeded.append(n)
-	
-	for n in unneeded:
-		del font['glyf'][n]
 
 if __name__ == '__main__':
 	region = sys.argv[1]
@@ -146,7 +122,7 @@ if __name__ == '__main__':
 		baseFont = json.loads(baseFile.read().decode('UTF-8', errors = 'replace'))
 
 	baseFont['OS_2']['ulCodePageRange1'] = { encoding: True }
-	NameFont(baseFont, 'Classic' if region == 'CL' else region, weight, version)
+	NameFont(baseFont, RegionSubfamilyMap[region], weight, version)
 
 	# quotes, em-dash and ellipsis
 	for u in [0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x2026]:

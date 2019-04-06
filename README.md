@@ -65,12 +65,12 @@ macOS 下的使用方法和 Windows 稍有不同。
 
 用 GCC 或 Clang
 ```bash
-g++ src/merge-otd.cpp src/iostream.cpp -Isrc/ -std=c++17 -O2 -o merge-otd
+g++ src/merge-otd.cpp src/merge-name.cpp src/iostream.cpp -Isrc/ -std=c++17 -O2 -o merge-otd
 ```
 
 或者用 Visual C++
 ```cmd
-cl src\merge-otd.cpp src\iostream.cpp /Isrc\ /std:c++17 /EHsc /O2 /Fe:merge-otd.exe
+cl src\merge-otd.cpp src\merge-name.cpp src\iostream.cpp /Isrc\ /std:c++17 /EHsc /O2 /Fe:merge-otd.exe
 ```
 
 ### 运行（需要 [otfcc](https://github.com/caryll/otfcc)）

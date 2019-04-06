@@ -23,7 +23,7 @@ cp ../script-unix/merge.sh $R/合并.command
 cp ../script-unix/merge+comp.sh $R/合并补全.command
 cp ../script-unix/pack-zh.sh $R/打包.command
 cp ../font/Nowar-Sans-CJK-XS-Regular.ttf $R/cjk.ttf
-cp ../font/Nowar-Neo-Sans-LCG-Regular.ttf $R/latin.ttf
+cp ../font/Nowar-Sans-LCG-Apache-Regular.ttf $R/latin.ttf
 
 tar -cJf $R.tar.xz $R/
 cp $R.tar.xz WarFontMerger-SC1-$VERSION.tar.xz

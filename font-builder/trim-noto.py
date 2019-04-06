@@ -1,6 +1,8 @@
 import json
 import sys
 
+from common import TrimGlyph, CopyRef
+
 def NameFont(font, weight, version):
 
 	isStdStyle = weight == 'Regular' or weight == 'Bold'
@@ -19,7 +21,7 @@ def NameFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 1,
-			"nameString": "Nowar Sans (Latin, Кириллица and Ελληνικό)" if isStdStyle else "Nowar Sans (Latin, Кириллица and Ελληνικό) " + weight
+			"nameString": "Nowar Sans LCG" if isStdStyle else "Nowar Sans LCG " + weight
 		},
 		{
 			"platformID": 3,
@@ -33,14 +35,14 @@ def NameFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 3,
-			"nameString": "Nowar Sans (Latin, Кириллица and Ελληνικό) " + weight + ' ' + str(version)
+			"nameString": "Nowar Sans LCG " + weight + ' ' + str(version)
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 4,
-			"nameString": "Nowar Sans (Latin, Кириллица and Ελληνικό) " + weight
+			"nameString": "Nowar Sans LCG " + weight
 		},
 		{
 			"platformID": 3,
@@ -96,7 +98,7 @@ def NameFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 16,
-			"nameString": "Nowar Sans (Latin, Кириллица and Ελληνικό)"
+			"nameString": "Nowar Sans LCG"
 		},
 		{
 			"platformID": 3,
@@ -106,31 +108,6 @@ def NameFont(font, weight, version):
 			"nameString": weight
 		},
 	]
-
-def AddRef(n, font, ref):
-	if n in ref:
-		return
-	glyph = font['glyf'][n]
-	if 'references' in glyph:
-		for r in glyph['references']:
-			ref.append(r['glyph'])
-			AddRef(r['glyph'], font, ref)
-
-def TrimGlyph(font):
-	needed = [ font['glyph_order'][0] ]
-	for (_, n) in font['cmap'].items():
-		needed.append(n)
-	ref = []
-	for n in needed:
-		AddRef(n, font, ref)
-
-	unneeded = []
-	for n in font['glyf']:
-		if not (n in needed or n in ref):
-			unneeded.append(n)
-	
-	for n in unneeded:
-		del font['glyf'][n]
 
 if __name__ == '__main__':
 	weight = sys.argv[1]
