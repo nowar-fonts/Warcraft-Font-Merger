@@ -14,6 +14,6 @@ read ext
 
 ./merge-otd base.otd latin.otd ext.otd cjk.otd
 
-./otfccbuild -O3 -o out.ttf base.otd
+./otfccbuild -q -O3 -o out.ttf base.otd
 
 rm base.otd latin.otd ext.otd cjk.otd

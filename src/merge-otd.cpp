@@ -88,7 +88,7 @@ void FixGlyphName(json &font, const std::string &prefix) {
 	for (auto &[u, n] : font["cmap"].items()) {
 		std::string name = n;
 		if (IsGidOrCid(name))
-			n = prefix + name, std::cout << name << '\n';
+			n = prefix + name;
 	}
 	std::vector<std::string> mod;
 	for (auto &[n, g] : font["glyf"].items()) {
