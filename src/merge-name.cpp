@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iterator>
 #include <map>
 #include <optional>
@@ -418,7 +419,53 @@ string MergeCopyright(const vector<json> &nametables) {
 	return result;
 }
 
-json MergeNameTable(const vector<json> &nametables) {
+void RemoveRedundantTable(vector<json> &nametables) {
+	vector<string> names;
+	size_t nowarlcg = -1;
+	for (size_t i = 0; i < nametables.size();) {
+		const json &table = nametables[i];
+		string family = GetNameEntry(table, NameId::PreferredFamily);
+		if (!family.length())
+			family = GetNameEntry(table, NameId::Family);
+		if (find(names.begin(), names.end(), family) != names.end()) {
+			nametables.erase(nametables.begin() + i);
+		} else {
+			names.push_back(family);
+			if (family == "Nowar Sans LCG")
+				nowarlcg = i;
+			i++;
+		}
+	}
+
+	// Nowar Sans LCG + Nowar Sans CJK
+	if (nowarlcg != -1) {
+		bool hascjk = false;
+		for (size_t i = 0; i < nametables.size(); i++) {
+			json &table = nametables[i];
+			string family = GetNameEntry(table, NameId::PreferredFamily);
+			if (family.length() >= 14 &&
+			    family.substr(0, 14) == "Nowar Sans CJK") {
+				hascjk = true;
+				for (auto &entry : table)
+					switch (NameId(entry["nameID"])) {
+					case NameId::Family:
+					case NameId::PreferredFamily:
+						entry["nameString"] =
+						    string(entry["nameString"]).replace(10, 4, "");
+						break;
+					default:
+						break;
+					}
+			}
+		}
+		if (hascjk)
+			nametables.erase(nametables.begin() + nowarlcg);
+	}
+}
+
+json MergeNameTable(vector<json> &nametables) {
+	RemoveRedundantTable(nametables);
+
 	auto [family, style, psname] = MergeName(nametables);
 	auto [legacyFamily, legacyStyle] = GetLagacyFamilyAndStyle(family, style);
 	auto [license, licenseUrl] = MergeLicense(nametables);
@@ -466,19 +513,19 @@ json MergeNameTable(const vector<json> &nametables) {
 	if (GetNameEntry(result, NameId::LicenseDescription) == "")
 		result.push_back({
 		    {"platformID", Platform::Windows},
-			{"encodingID", Encoding::Unicode},
-			{"languageID", Language::en_US},
-			{"nameID", NameId::LicenseDescription},
-			{"nameString", license},
+		    {"encodingID", Encoding::Unicode},
+		    {"languageID", Language::en_US},
+		    {"nameID", NameId::LicenseDescription},
+		    {"nameString", license},
 		});
 
 	if (GetNameEntry(result, NameId::Copyright) == "")
 		result.push_back({
 		    {"platformID", Platform::Windows},
-			{"encodingID", Encoding::Unicode},
-			{"languageID", Language::en_US},
-			{"nameID", NameId::Copyright},
-			{"nameString", copyright},
+		    {"encodingID", Encoding::Unicode},
+		    {"languageID", Language::en_US},
+		    {"nameID", NameId::Copyright},
+		    {"nameString", copyright},
 		});
 
 	return result;
