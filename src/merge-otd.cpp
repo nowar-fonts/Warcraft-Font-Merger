@@ -53,17 +53,17 @@ void Transform(json &glyph, double a, double b, double c, double d, double dx,
 	if (glyph.find("contours") != glyph.end())
 		for (auto &contour : glyph["contours"])
 			for (auto &point : contour) {
-				point["x"] =
-				    a * double(point["x"]) + b * double(point["y"]) + dx;
-				point["y"] =
-				    c * double(point["x"]) + d * double(point["y"]) + dy;
+				double x = point["x"];
+				double y = point["y"];
+				point["x"] = int(a * x + b * y + dx);
+				point["y"] = int(c * x + d * y + dy);
 			}
 	if (glyph.find("references") != glyph.end())
 		for (auto &reference : glyph["references"]) {
-			reference["x"] =
-			    a * double(reference["x"]) + b * double(reference["y"]) + dx;
-			reference["y"] =
-			    c * double(reference["x"]) + d * double(reference["y"]) + dy;
+			double x = reference["x"];
+			double y = reference["y"];
+			reference["x"] = int(a * x + b * y + dx);
+			reference["y"] = int(c * x + d * y + dy);
 		}
 }
 
@@ -77,6 +77,35 @@ void MoveRef(json &glyph, json &base, json &ext) {
 				MoveRef(base["glyf"][name], base, ext);
 			}
 		}
+}
+
+bool IsGidOrCid(const std::string &name) {
+	return (name.length() >= 6 && name.substr(0, 5) == "glyph") ||
+	       (name.length() >= 4 && name.substr(0, 3) == "cid");
+}
+
+void FixGlyphName(json &font, const std::string &prefix) {
+	for (auto &[u, n] : font["cmap"].items()) {
+		std::string name = n;
+		if (IsGidOrCid(name))
+			n = prefix + name, std::cout << name << '\n';
+	}
+	std::vector<std::string> mod;
+	for (auto &[n, g] : font["glyf"].items()) {
+		if (IsGidOrCid(n))
+			mod.push_back(n);
+		if (g.find("references") != g.end()) {
+			auto &ref = g["references"];
+			for (auto &d : ref)
+				if (IsGidOrCid(d["glyph"]))
+					d["glyph"] = prefix + std::string(d["glyph"]);
+		}
+	}
+	auto &glyf = font["glyf"];
+	for (auto &n : mod) {
+		glyf[prefix + n] = glyf[n];
+		glyf.erase(n);
+	}
 }
 
 void MergeFont(json &base, json &ext) {
@@ -180,6 +209,7 @@ int main(int argc, char *u8argv[]) {
 		}
 		RemoveBlankGlyph(ext);
 		nametables.push_back(ext["name"]);
+		FixGlyphName(ext, u8argv[argi] + std::string(":"));
 		MergeFont(base, ext);
 		if (ext.find("OS_2") != ext.end()) {
 			auto &OS_2 = ext["OS_2"];

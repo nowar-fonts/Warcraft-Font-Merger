@@ -10,7 +10,7 @@ read ext
 ./otfccdump --ignore-hints -o base.otd "$base"
 ./otfccdump --ignore-hints -o latin.otd latin.ttf
 ./otfccdump --ignore-hints -o ext.otd "$ext"
-./otfccdump --ignore-hints --name-by-hash -o cjk.otd cjk.ttf
+./otfccdump --ignore-hints -o cjk.otd cjk.ttf
 
 ./merge-otd base.otd latin.otd ext.otd cjk.otd
 
