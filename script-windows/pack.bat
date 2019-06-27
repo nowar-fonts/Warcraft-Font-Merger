@@ -19,6 +19,7 @@ copy %1 Fonts\ARHei.ttf
 copy %1 Fonts\ARKai_C.ttf
 copy %1 Fonts\ARKai_T.ttf
 
+copy %1 Fonts\arheiuhk_bd.ttf
 copy %1 Fonts\bHEI00M.ttf
 copy %1 Fonts\bHEI01B.ttf
 copy %1 Fonts\bKAI00M.ttf

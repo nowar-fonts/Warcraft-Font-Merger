@@ -21,6 +21,7 @@ cp "$base" Fonts/ARHei.ttf
 cp "$base" Fonts/ARKai_C.ttf
 cp "$base" Fonts/ARKai_T.ttf
 
+cp "$base" Fonts/arheiuhk_bd.ttf
 cp "$base" Fonts/bHEI00M.ttf
 cp "$base" Fonts/bHEI01B.ttf
 cp "$base" Fonts/bKAI00M.ttf
