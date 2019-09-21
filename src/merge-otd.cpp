@@ -18,9 +18,9 @@
 #include "invisible.hpp"
 #include "merge-name.h"
 
-const char *usage = u8"用法：\n\t%s 1.otd 2.otd [n.otd ...]\n";
-const char *loadfilefail = u8"读取文件 %s 失败\n";
-const char *mixedpostscript = u8"暂不支持混用 TrueType 和 PostScript 轮廓字体";
+const char *usage = reinterpret_cast<const char *>(u8"用法：\n\t%s 1.otd 2.otd [n.otd ...]\n");
+const char *loadfilefail = reinterpret_cast<const char *>(u8"读取文件 %s 失败\n");
+const char *mixedpostscript = reinterpret_cast<const char *>(u8"暂不支持混用 TrueType 和 PostScript 轮廓字体");
 
 using json = nlohmann::json;
 
