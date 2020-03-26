@@ -16,7 +16,6 @@ R=字体合并补全工具-简体中文压缩字库-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主页-使用说明.url
-cp ../script-windows/fonts.url $R/获取更多字体.url
 cp ../bin-win32/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/补全.bat
 cp ../script-windows/merge.bat $R/合并.bat
@@ -34,7 +33,6 @@ R=字体合并补全工具-简体中文标准字库-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主页-使用说明.url
-cp ../script-windows/fonts.url $R/获取更多字体.url
 cp ../bin-win32/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/补全.bat
 cp ../script-windows/merge.bat $R/合并.bat

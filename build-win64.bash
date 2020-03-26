@@ -16,7 +16,6 @@ R=字体合并补全工具-简体中文压缩字库-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主页-使用说明.url
-cp ../script-windows/fonts.url $R/获取更多字体.url
 cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/补全.bat
 cp ../script-windows/merge.bat $R/合并.bat
@@ -34,7 +33,6 @@ R=字体合并补全工具-简体中文标准字库-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主页-使用说明.url
-cp ../script-windows/fonts.url $R/获取更多字体.url
 cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/补全.bat
 cp ../script-windows/merge.bat $R/合并.bat
@@ -52,7 +50,6 @@ R=字体合并补全工具-简体中文大字库-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主页-使用说明.url
-cp ../script-windows/fonts.url $R/获取更多字体.url
 cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/补全.bat
 cp ../script-windows/merge.bat $R/合并.bat
@@ -70,7 +67,6 @@ R=字型合併補全工具-繁體中文大字庫-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主頁-使用說明\(簡體\).url
-cp ../script-windows/fonts.url $R/獲取更多字型\(簡體\).url
 cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/補全.bat
 cp ../script-windows/merge.bat $R/合併.bat
@@ -88,7 +84,6 @@ R=字型合併補全工具-傳統字形大字庫-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主頁-使用說明\(簡體\).url
-cp ../script-windows/fonts.url $R/獲取更多字型\(簡體\).url
 cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/補全.bat
 cp ../script-windows/merge.bat $R/合併.bat

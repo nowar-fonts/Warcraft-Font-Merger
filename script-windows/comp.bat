@@ -1,7 +1,7 @@
 %~d0
 cd "%~dp0"
 
-.\otfccdump.exe --ignore-hints -o base.otd %1
+.\otfccdump.exe --ignore-hints -o base.otd "%~1"
 .\otfccdump.exe --ignore-hints -o latin.otd latin.ttf
 .\otfccdump.exe --ignore-hints -o cjk.otd cjk.ttf
 
