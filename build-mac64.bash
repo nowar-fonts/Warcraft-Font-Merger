@@ -4,8 +4,7 @@ source ./version.bash
 
 VERSION=$VERSION-mac64
 
-clang++ src/merge-otd.cpp src/merge-name.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -o bin-mac64/merge-otd
-strip bin-mac64/merge-otd
+clang++ src/merge-otd.cpp src/merge-name.cpp src/ps2tt.cpp src/tt2ps.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -s -o bin-mac64/merge-otd
 
 mkdir -p release
 cd release

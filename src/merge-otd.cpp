@@ -17,10 +17,11 @@
 
 #include "invisible.hpp"
 #include "merge-name.h"
+#include "ps2tt.h"
+#include "tt2ps.h"
 
 const char *usage = reinterpret_cast<const char *>(u8"用法：\n\t%s 1.otd 2.otd [n.otd ...]\n");
 const char *loadfilefail = reinterpret_cast<const char *>(u8"读取文件 %s 失败\n");
-const char *mixedpostscript = reinterpret_cast<const char *>(u8"暂不支持混用 TrueType 和 PostScript 轮廓字体");
 
 using json = nlohmann::json;
 
@@ -188,7 +189,7 @@ int main(int argc, char *u8argv[]) {
 	try {
 		auto s = LoadFile(u8argv[1]);
 		base = json::parse(s);
-	} catch (std::runtime_error) {
+	} catch (const std::runtime_error &) {
 		return EXIT_FAILURE;
 	}
 	basecff = IsPostScriptOutline(base);
@@ -203,9 +204,11 @@ int main(int argc, char *u8argv[]) {
 		} catch (std::runtime_error) {
 			return EXIT_FAILURE;
 		}
-		if (IsPostScriptOutline(ext) != basecff) {
-			nowide::cerr << mixedpostscript << std::endl;
-			return EXIT_FAILURE;
+		bool extcff = IsPostScriptOutline(ext);
+		if (basecff && !extcff) {
+			ext["glyf"] = Tt2Ps(ext["glyf"]);
+		} else if (!basecff && extcff) {
+			ext["glyf"] = Ps2Tt(ext["glyf"]);
 		}
 		RemoveBlankGlyph(ext);
 		nametables.push_back(ext["name"]);

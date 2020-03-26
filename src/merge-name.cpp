@@ -438,7 +438,7 @@ void RemoveRedundantTable(vector<json> &nametables) {
 	}
 
 	// Nowar Sans LCG + Nowar Sans CJK
-	if (nowarlcg != -1) {
+	if (nowarlcg != size_t(-1)) {
 		bool hascjk = false;
 		for (size_t i = 0; i < nametables.size(); i++) {
 			json &table = nametables[i];

@@ -11,8 +11,6 @@
 * `WarFontMerger-TC-版本号.7z`：繁体中文大字库（覆盖中日韩各国字符，字形采用台湾标准，体积稍大）。
 * `WarFontMerger-Classic-版本号.7z`：传统字形大字库（覆盖中日韩各国字符，字形采用传统印刷体风格，体积稍大）。
 
-除了合并补全工具自带的字体库之外，[WMF 开源字体库](https://github.com/CyanoHao/WFM-Free-Font) 中的字体也经过验证可以用于该工具。
-
 ## 快速入门（Windows）
 
 ### 合并两个字体并补全
@@ -56,7 +54,6 @@ macOS 下的使用方法和 Windows 稍有不同。
 
 ## 限制
 
-* 目前只支持 TrueType 曲线字体（TrueType 或 OpenType/TT，扩展名通常为 `.ttf`），暂不支持 PostScript 曲线字体（OpenType/CFF 或 OpenType/CID，扩展名通常为 `.otf`）。
 * 不提供预编译的 32 位版本。WFM 不可避免地需要操纵汉字，而汉字是一个非常庞大的集合，读取并操作汉字需要巨大的内存，32 位程序极易因为超出内存上限而崩溃。
 
 ## 编译和运行
@@ -110,20 +107,12 @@ otfccbuild base.otd -O2 -o 合并之后的字体.ttf
 rm *.otd
 ```
 
-## 开发计划
-
-### 支持对每个字体自定义变换矩阵
-
-这样可以更好地匹配原有字体的风格。例如，修改倾斜角度、压缩字符宽度，甚至旋转字符。
-
-### 支持 PostScript 曲线字体
-
-许多高质量的字体采用了 PostScript 曲线，封装为 OpenType/CFF 或 OpenType/CID 字体。由于 OpenType/CFF 或 OpenType/CID 的字体格式与 OpenType/TT 差别很大，目前还没办法支持。
-
 ## 感谢
 
 [Belleve Invis](https://github.com/be5invis) 和[李阿玲](https://github.com/clerkma)编写的 [otfcc](https://github.com/caryll/otfcc) 用于解析和生成 OpenType 字体文件。
 
 [Niels Lohmann](https://github.com/nlohmann) 的 [json](https://github.com/nlohmann/json) 库提供了非常漂亮的 C++ JSON 接口。本工具使用了修改版的 `json.hpp`，容许非标准编码的字符。
+
+TrueType 和 PostScript 曲线相互转换的算法来自 [AFDKO](https://github.com/adobe-type-tools/afdko) 和 [Fontello](https://github.com/fontello/cubic2quad)。这两个算法有[配合 otfcc 使用的独立版本](https://github.com/nowar-fonts/otfcc-quad2cubic)，可用于 OpenType/TT 和 OpenType/CFF 字体的相互转换。
 
 Google 提供了大量的开源字体，Adobe 提供了高质量的[思源黑体](https://github.com/adobe-fonts/source-han-sans)。
