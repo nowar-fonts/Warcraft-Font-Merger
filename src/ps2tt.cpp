@@ -138,7 +138,7 @@ inline Solution QuadSolve(Coeff1 coeff)
 	           : (delta ? T{-b / (2 * a)} : T{});
 }
 
-constexpr double curt(double x)
+inline double curt(double x)
 {
 	return x < 0 ? -pow(-x, 1.0 / 3) : pow(x, 1.0 / 3);
 }
