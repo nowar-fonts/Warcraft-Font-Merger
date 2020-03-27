@@ -37,6 +37,20 @@
 
 ## 快速入门（macOS）
 
+### 允许未经签名的 WFM 运行
+
+在较新的 macOS 系统上，默认不允许运行未经签名的应用程序。如果遇到这种情况，可以先手动运行一次以下程序：
+* `merge-otd`，
+* `otfccdump`，
+* `otfccbuild`，
+* 想要运行的 command 文件（`补全.command`、`合并补全.command`、`合并.command`、`打包.command`）。
+
+具体的方法是：按住 Control 键单击需要运行的程序，在弹出的菜单中选择 “打开”（这时程序会因为参数错误而运行失败，不必理会），然后关闭程序窗口。
+
+参见 [Open a Mac app from an unidentified developer](https://support.apple.com/en-gb/guide/mac-help/mh40616/mac)。
+
+### 使用方法
+
 macOS 下的使用方法和 Windows 稍有不同。
 
 首先双击打开相应的 `.command` 文件，然后依次按照提示将字体文件拖动到命令窗口中，并按回车键确认。
