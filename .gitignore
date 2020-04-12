@@ -5,5 +5,5 @@ __pycache__
 /font-builder/out
 /bin-win*/merge-otd.exe
 /bin-mac64/merge-otd
-/bin-gnu*/merge-otd
+/bin-linux*/merge-otd
 /release
