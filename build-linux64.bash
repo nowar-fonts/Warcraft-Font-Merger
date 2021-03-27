@@ -1,10 +1,15 @@
 #! /bin/bash
 
-source ./version.bash
+cmake . -B build/ \
+	-DCMAKE_BUILD_TYPE="Release" \
+	-DCMAKE_C_COMPILER="x86_64-pc-linux-gnu-gcc" \
+	-DCMAKE_C_FLAGS="-s" \
+	-DCMAKE_CXX_COMPILER="x86_64-pc-linux-gnu-g++" \
+	-DCMAKE_CXX_FLAGS="-static-libstdc++ -s"
+cmake --build build/ -j$(nproc)
 
+source build/config/config.sh
 VERSION=$VERSION-linux64
-
-g++ src/merge-otd.cpp src/merge-name.cpp src/ps2tt.cpp src/tt2ps.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -s -o bin-linux64/merge-otd
 
 mkdir -p release
 cd release
@@ -15,7 +20,7 @@ R=字体合并补全工具-简体中文压缩字库-$VERSION
 mkdir -p $R
 
 cp ../script-unix/link.url $R/主页-使用说明.url
-cp ../bin-linux64/{otfccbuild,otfccdump,merge-otd} $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd} $R/
 cp ../script-unix/comp.sh $R/补全.sh
 cp ../script-unix/merge.sh $R/合并.sh
 cp ../script-unix/merge+comp.sh $R/合并补全.sh
@@ -32,7 +37,7 @@ R=字体合并补全工具-简体中文标准字库-$VERSION
 mkdir -p $R
 
 cp ../script-unix/link.url $R/主页-使用说明.url
-cp ../bin-linux64/{otfccbuild,otfccdump,merge-otd} $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd} $R/
 cp ../script-unix/comp.sh $R/补全.sh
 cp ../script-unix/merge.sh $R/合并.sh
 cp ../script-unix/merge+comp.sh $R/合并补全.sh
@@ -49,7 +54,7 @@ R=字体合并补全工具-简体中文大字库-$VERSION
 mkdir -p $R
 
 cp ../script-unix/link.url $R/主页-使用说明.url
-cp ../bin-linux64/{otfccbuild,otfccdump,merge-otd} $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd} $R/
 cp ../script-unix/comp.sh $R/补全.sh
 cp ../script-unix/merge.sh $R/合并.sh
 cp ../script-unix/merge+comp.sh $R/合并补全.sh
@@ -66,7 +71,7 @@ R=字型合併補全工具-繁體中文大字庫-$VERSION
 mkdir -p $R
 
 cp ../script-unix/link.url $R/主頁-使用說明\(簡體\).url
-cp ../bin-linux64/{otfccbuild,otfccdump,merge-otd} $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd} $R/
 cp ../script-unix/comp.sh $R/補全.sh
 cp ../script-unix/merge.sh $R/合併.sh
 cp ../script-unix/merge+comp.sh $R/合併補全.sh
@@ -83,7 +88,7 @@ R=字型合併補全工具-傳統字形大字庫-$VERSION
 mkdir -p $R
 
 cp ../script-unix/link.url $R/主頁-使用說明\(簡體\).url
-cp ../bin-linux64/{otfccbuild,otfccdump,merge-otd} $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd} $R/
 cp ../script-unix/comp.sh $R/補全.sh
 cp ../script-unix/merge.sh $R/合併.sh
 cp ../script-unix/merge+comp.sh $R/合併補全.sh

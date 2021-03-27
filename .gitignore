@@ -3,7 +3,5 @@ __pycache__
 /.vscode
 /font-builder/src/*.otd
 /font-builder/out
-/bin-win*/merge-otd.exe
-/bin-mac64/merge-otd
-/bin-linux*/merge-otd
+/build
 /release

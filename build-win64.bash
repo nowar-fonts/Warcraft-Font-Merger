@@ -1,10 +1,15 @@
 #! /bin/bash
 
-source ./version.bash
+cmake . -B build/ \
+	-DCMAKE_BUILD_TYPE="Release" \
+	-DCMAKE_C_COMPILER="x86_64-w64-mingw32-gcc" \
+	-DCMAKE_C_FLAGS="-static -s" \
+	-DCMAKE_CXX_COMPILER="x86_64-w64-mingw32-g++" \
+	-DCMAKE_CXX_FLAGS="-static -s"
+cmake --build build/ -j$(nproc)
 
+source build/config/config.sh
 VERSION=$VERSION-win64
-
-x86_64-w64-mingw32-g++ src/merge-otd.cpp src/merge-name.cpp src/ps2tt.cpp src/tt2ps.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -s -o bin-win64/merge-otd.exe
 
 mkdir -p release
 cd release
@@ -15,7 +20,7 @@ R=字体合并补全工具-简体中文压缩字库-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主页-使用说明.url
-cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/补全.bat
 cp ../script-windows/merge.bat $R/合并.bat
 cp ../script-windows/merge+comp.bat $R/合并补全.bat
@@ -32,7 +37,7 @@ R=字体合并补全工具-简体中文标准字库-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主页-使用说明.url
-cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/补全.bat
 cp ../script-windows/merge.bat $R/合并.bat
 cp ../script-windows/merge+comp.bat $R/合并补全.bat
@@ -49,7 +54,7 @@ R=字体合并补全工具-简体中文大字库-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主页-使用说明.url
-cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/补全.bat
 cp ../script-windows/merge.bat $R/合并.bat
 cp ../script-windows/merge+comp.bat $R/合并补全.bat
@@ -66,7 +71,7 @@ R=字型合併補全工具-繁體中文大字庫-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主頁-使用說明\(簡體\).url
-cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/補全.bat
 cp ../script-windows/merge.bat $R/合併.bat
 cp ../script-windows/merge+comp.bat $R/合併補全.bat
@@ -83,7 +88,7 @@ R=字型合併補全工具-傳統字形大字庫-$VERSION
 mkdir -p $R
 
 cp ../script-windows/link.url $R/主頁-使用說明\(簡體\).url
-cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+cp ../build/{otfccbuild,otfccdump,merge-otd}.exe $R/
 cp ../script-windows/comp.bat $R/補全.bat
 cp ../script-windows/merge.bat $R/合併.bat
 cp ../script-windows/merge+comp.bat $R/合併補全.bat

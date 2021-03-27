@@ -1,0 +1,5 @@
+#pragma once
+
+#define WFM_all_VERSION_MAJOR @WFM_all_VERSION_MAJOR@
+#define WFM_all_VERSION_MINOR @WFM_all_VERSION_MINOR@
+#define WFM_all_VERSION_PATCH @WFM_all_VERSION_PATCH@

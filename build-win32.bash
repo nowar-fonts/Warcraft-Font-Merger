@@ -1,5 +1,8 @@
 #! /bin/bash
 
+echo "currently not available"
+return 1
+
 source ./version.bash
 
 VERSION=$VERSION-win32
