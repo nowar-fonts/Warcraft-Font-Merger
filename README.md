@@ -4,12 +4,26 @@
 
 下载[最新版](https://github.com/CyanoHao/Warcraft-Font-Merger/releases/latest)的字体合并补全工具并解压缩。
 
-字体合并补全工具 Windows 和 macOS 各有 5 个版本，各个版本的自带字库不同。
-* `WarFontMerger-SC1-版本号.7z`：简体中文压缩字库（覆盖 GB18030，字体文件采用压缩技术，体积小但字形质量一般）。
-* `WarFontMerger-SC2-版本号.7z`：简体中文标准字库（覆盖 GB18030，字形质量较好，**推荐**）。
-* `WarFontMerger-SC3-版本号.7z`：简体中文大字库（覆盖中日韩各国字符，字形和标准字库一致，体积稍大）。
-* `WarFontMerger-TC-版本号.7z`：繁体中文大字库（覆盖中日韩各国字符，字形采用台湾标准，体积稍大）。
-* `WarFontMerger-Classic-版本号.7z`：传统字形大字库（覆盖中日韩各国字符，字形采用传统印刷体风格，体积稍大）。
+字体合并补全工具在运行平台和自带字库两个维度上划分不同的版本。文件的命名规则为 `WarFontMerger-自带字库-版本号-运行平台`。
+
+WFM 支持以下 64 位运行平台：
+
+| 运行平台 | 运行时依赖 | 备注 |
+| -------- | ---------- | ---- |
+| `winx86` — Windows x64 | 无（链接到 `msvcrt.dll`）| 64 位操作系统，基于 x86 的处理器 |
+| `winarm` — Windows ARM64 | 无（链接到 `ucrtbase.dll`）| 64 位操作系统，基于 ARM 的处理器 |
+| `mac` — macOS | 推荐使用 macOS 10.15 或更高版本 | 通用二进制文件 |
+| `linux` — Linux x86-64 | 无（musl 静态链接）| 如需在其他 64 位架构上运行，参见 “编译和运行” 部分 |
+
+WFM 具有以下自带字库版本：
+
+| 自带字库 | 字符集 | 备注 |
+| -------- | ------ | ---- |
+| `SC1` — 简体中文压缩字库 | GB18030 | 字体文件采用压缩技术 |
+| `SC2` — 简体中文标准字库 | GB18030 | **推荐** |
+| `SC3` — 简体中文大字库 | GB18030 + 韩国语谚文 | |
+| `TC` — 繁体中文大字库 | GB18030 + 韩国语谚文 | 采用繁体中文常见的字形 |
+| `Classic` — 传统字形大字库 | GB18030 + 韩国语谚文 | 采用接近传统印刷体的字形 |
 
 ## 快速入门（Windows）
 
@@ -36,9 +50,9 @@
 
 打开字体合并补全工具文件夹，把准备好的字体拖动到 `打包.bat` 上，然后将生成的 `Fonts` 文件夹移动到 `World of Warcraft\_retail_\` 下面。
 
-## 快速入门（macOS）
+## 快速入门（macOS 和 Linux）
 
-### 允许未经签名的 WFM 运行
+### 在 macOS 上允许未经签名的 WFM 运行
 
 在较新的 macOS 系统上，默认不允许运行未经签名的应用程序。如果遇到这种情况，可以先手动运行一次以下程序：
 * `merge-otd`，
@@ -48,13 +62,13 @@
 
 具体的方法是：按住 Control 键单击需要运行的程序，在弹出的菜单中选择 “打开”（这时程序会因为参数错误而运行失败，不必理会），然后关闭程序窗口。
 
-参见 [Open a Mac app from an unidentified developer](https://support.apple.com/en-gb/guide/mac-help/mh40616/mac)。
+参见[打开来自身份不明开发者的 Mac App](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)。
 
 ### 使用方法
 
-macOS 下的使用方法和 Windows 稍有不同。
+macOS 和 Linux 上的使用方法和 Windows 稍有不同。
 
-首先双击打开相应的 `.command` 文件，然后依次按照提示将字体文件拖动到命令窗口中，并按回车键确认。
+首先打开相应的 `.command`（macOS）或 `.sh`（Linux）文件，然后依次按照提示将字体文件拖动到命令窗口中，并按回车键确认。
 
 等候片刻即可得到补全完成的字体 `out.ttf`。
 

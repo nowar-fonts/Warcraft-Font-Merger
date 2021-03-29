@@ -3,3 +3,9 @@ Prop3=19,11
 [InternetShortcut]
 IDList=
 URL=https://github.com/CyanoHao/Warcraft-Font-Merger
+[Desktop Entry]
+Encoding=UTF-8
+Name=Homepage
+Type=Link
+URL=https://github.com/CyanoHao/Warcraft-Font-Merger
+Icon=text-html
