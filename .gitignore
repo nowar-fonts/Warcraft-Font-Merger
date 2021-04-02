@@ -1,7 +1,9 @@
 .DS_Store
 __pycache__
 /.vscode
+/.cache
 /font-builder/src/*.otd
 /font-builder/out
 /build
 /release
+/compile_commands.json
