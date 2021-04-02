@@ -3,9 +3,9 @@
 cmake . -B build/ \
 	-DCMAKE_BUILD_TYPE="Release" \
 	-DCMAKE_C_COMPILER="x86_64-gentoo-linux-musl-gcc" \
-	-DCMAKE_C_FLAGS="-static -s" \
+	-DCMAKE_C_FLAGS="-static-pie -s" \
 	-DCMAKE_CXX_COMPILER="x86_64-gentoo-linux-musl-g++" \
-	-DCMAKE_CXX_FLAGS="-static -s"
+	-DCMAKE_CXX_FLAGS="-static-pie -s"
 cmake --build build/ -j$(nproc)
 
 source build/config/config.sh
