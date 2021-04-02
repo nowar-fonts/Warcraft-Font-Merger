@@ -2,6 +2,7 @@
 
 cmake . -B build/ -G "MinGW Makefiles" \
 	-DCMAKE_BUILD_TYPE="Release" \
+	-DCMAKE_INTERPROCEDURAL_OPTIMIZATION:BOOL="ON" \
 	-DCMAKE_C_COMPILER="aarch64-w64-mingw32-clang" \
 	-DCMAKE_C_FLAGS="-static -s" \
 	-DCMAKE_CXX_COMPILER="aarch64-w64-mingw32-clang++" \

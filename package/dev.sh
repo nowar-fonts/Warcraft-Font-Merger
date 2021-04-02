@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cmake . -B build/ \
-	-DCMAKE_BUILD_TYPE="Release"
+	-DCMAKE_BUILD_TYPE="RelWithDebugInfo"
 cmake --build build/ -j$(nproc)
 
 source build/config/config.sh

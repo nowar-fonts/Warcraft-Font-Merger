@@ -2,6 +2,7 @@
 
 cmake . -B build/ \
 	-DCMAKE_BUILD_TYPE="Release" \
+	-DCMAKE_INTERPROCEDURAL_OPTIMIZATION:BOOL="ON" \
 	-DCMAKE_C_COMPILER="x86_64-w64-mingw32-gcc" \
 	-DCMAKE_C_FLAGS="-static -s" \
 	-DCMAKE_CXX_COMPILER="x86_64-w64-mingw32-g++" \

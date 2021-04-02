@@ -2,6 +2,7 @@
 
 cmake . -B build/ \
 	-DCMAKE_BUILD_TYPE="Release" \
+	-DCMAKE_INTERPROCEDURAL_OPTIMIZATION:BOOL="ON" \
 	-DCMAKE_C_COMPILER="clang" \
 	-DCMAKE_C_FLAGS="-arch x86_64 -arch arm64" \
 	-DCMAKE_CXX_COMPILER="clang++" \

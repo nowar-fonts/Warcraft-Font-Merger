@@ -2,6 +2,7 @@
 
 cmake . -B build/ \
 	-DCMAKE_BUILD_TYPE="Release" \
+	-DCMAKE_INTERPROCEDURAL_OPTIMIZATION:BOOL="ON" \
 	-DCMAKE_C_COMPILER="x86_64-gentoo-linux-musl-gcc" \
 	-DCMAKE_C_FLAGS="-static-pie -s" \
 	-DCMAKE_CXX_COMPILER="x86_64-gentoo-linux-musl-g++" \

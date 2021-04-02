@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)  # C++20 requires 3.12
+cmake_minimum_required(VERSION 3.12)
 project(WFM_all)
 include(CheckLibraryExists)
 
