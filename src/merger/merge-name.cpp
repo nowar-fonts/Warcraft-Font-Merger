@@ -61,7 +61,7 @@ struct License {
 	// bool BSD;
 	// bool MIT;
 
-	operator bool() { return GPL || LGPL || OFL || Apache; }
+	explicit operator bool() const { return GPL || LGPL || OFL || Apache; }
 };
 
 enum class Platform {
@@ -233,19 +233,19 @@ string GeneratePostScriptName(string name, string style) {
 	return name + "-" + style;
 }
 
-string GetNameEntry(const json &name, NameId nameid,
+string GetNameEntry(const json &name, NameId nameId,
                     Platform platform = Platform::Windows,
                     Encoding encoding = Encoding::UnicodeBMP,
                     Language language = Language::en_US,
                     bool enableLanguageFallback = false) {
 	for (const auto &entry : name)
-		if (nameid == entry["nameID"] && platform == entry["platformID"] &&
+		if (nameId == entry["nameID"] && platform == entry["platformID"] &&
 		    encoding == entry["encodingID"] && language == entry["languageID"])
 			return entry["nameString"];
 	if (enableLanguageFallback) {
 		auto pFallback = LanguageFallback.find(language);
 		if (pFallback != LanguageFallback.end())
-			return GetNameEntry(name, nameid, platform, encoding,
+			return GetNameEntry(name, nameId, platform, encoding,
 			                    pFallback->second, true);
 	}
 	return {};
@@ -369,16 +369,16 @@ cannot_decide:
 	return {license, {}};
 }
 
-pair<string, string> GetLagacyFamilyAndStyle(string family, string style) {
+pair<string, string> GetLagacyFamilyAndStyle(const string& family, const string& style) {
 	// 4 standard styles
 	if (style == "Regular" || style == "Italic" || style == "Bold" ||
 	    style == "Bold Italic")
 		return {family, style};
 
 	size_t pos;
-	if ((pos = style.find(" Bold Italic")) != style.npos ||
-	    (pos = style.find(" Italic")) != style.npos ||
-	    (pos = style.find(" Bold")) != style.npos) {
+	if ((pos = style.find(" Bold Italic")) != std::string::npos ||
+	    (pos = style.find(" Italic")) != std::string::npos ||
+	    (pos = style.find(" Bold")) != std::string::npos) {
 		return {family + " " + style.substr(0, pos), style.substr(pos + 1)};
 	}
 
@@ -425,23 +425,23 @@ tuple<string, string, string> MergeName(const vector<json> &nameTables,
 	}
 }
 
-string MergeCopyright(const vector<json> &nametables) {
-	string result = GetNameEntry(nametables[0], NameId::Copyright);
-	for (size_t i = 1; i < nametables.size(); i++)
-		result += "\n" + GetNameEntry(nametables[i], NameId::Copyright);
+string MergeCopyright(const vector<json> &nameTables) {
+	string result = GetNameEntry(nameTables[0], NameId::Copyright);
+	for (size_t i = 1; i < nameTables.size(); i++)
+		result += "\n" + GetNameEntry(nameTables[i], NameId::Copyright);
 	return result;
 }
 
-void RemoveRedundantTable(vector<json> &nametables) {
+void RemoveRedundantTable(vector<json> &nameTables) {
 	vector<string> names;
 	size_t nowarlcg = -1;
-	for (size_t i = 0; i < nametables.size();) {
-		const json &table = nametables[i];
+	for (size_t i = 0; i < nameTables.size();) {
+		const json &table = nameTables[i];
 		string family = GetNameEntry(table, NameId::PreferredFamily);
 		if (!family.length())
 			family = GetNameEntry(table, NameId::Family);
 		if (find(names.begin(), names.end(), family) != names.end()) {
-			nametables.erase(nametables.begin() + i);
+			nameTables.erase(nameTables.begin() + i);
 		} else {
 			names.push_back(family);
 			if (family == "Nowar Sans LCG")
@@ -452,13 +452,12 @@ void RemoveRedundantTable(vector<json> &nametables) {
 
 	// Nowar Sans LCG + Nowar Sans CJK
 	if (nowarlcg != size_t(-1)) {
-		bool hascjk = false;
-		for (size_t i = 0; i < nametables.size(); i++) {
-			json &table = nametables[i];
+		bool hasCJK = false;
+		for (auto &table : nameTables) {
 			string family = GetNameEntry(table, NameId::PreferredFamily);
 			if (family.length() >= 14 &&
 			    family.substr(0, 14) == "Nowar Sans CJK") {
-				hascjk = true;
+				hasCJK = true;
 				for (auto &entry : table)
 					switch (NameId(entry["nameID"])) {
 					case NameId::Family:
@@ -471,23 +470,23 @@ void RemoveRedundantTable(vector<json> &nametables) {
 					}
 			}
 		}
-		if (hascjk)
-			nametables.erase(nametables.begin() + nowarlcg);
+		if (hasCJK)
+			nameTables.erase(nameTables.begin() + nowarlcg);
 	}
 }
 
-json MergeNameTable(vector<json> &nametables, const std::string &overrideName,
+json MergeNameTable(vector<json> &nameTables, const std::string &overrideName,
                     const std::string &overrideStyle) {
-	RemoveRedundantTable(nametables);
+	RemoveRedundantTable(nameTables);
 
-	auto [family, style, psname] =
-	    MergeName(nametables, overrideName, overrideStyle);
+	auto [family, style, psName] =
+	    MergeName(nameTables, overrideName, overrideStyle);
 	auto [legacyFamily, legacyStyle] = GetLagacyFamilyAndStyle(family, style);
-	auto [license, licenseUrl] = MergeLicense(nametables);
-	auto copyright = MergeCopyright(nametables);
-	auto version = GetNameEntry(nametables[0], NameId::Version);
+	auto [license, licenseUrl] = MergeLicense(nameTables);
+	auto copyright = MergeCopyright(nameTables);
+	auto version = GetNameEntry(nameTables[0], NameId::Version);
 
-	json result = nametables[0];
+	json result = nameTables[0];
 	for (auto &entry : result) {
 		switch (NameId(entry["nameID"])) {
 		case NameId::Copyright:
@@ -506,7 +505,7 @@ json MergeNameTable(vector<json> &nametables, const std::string &overrideName,
 			entry["nameString"] = family + " " + style;
 			break;
 		case NameId::PostScript:
-			entry["nameString"] = psname;
+			entry["nameString"] = psName;
 			break;
 		case NameId::LicenseDescription:
 			entry["nameString"] = license;
@@ -525,7 +524,7 @@ json MergeNameTable(vector<json> &nametables, const std::string &overrideName,
 		}
 	}
 
-	if (GetNameEntry(result, NameId::LicenseDescription) == "")
+	if (GetNameEntry(result, NameId::LicenseDescription).empty())
 		result.push_back({
 		    {"platformID", Platform::Windows},
 		    {"encodingID", Encoding::Unicode},
@@ -534,7 +533,7 @@ json MergeNameTable(vector<json> &nametables, const std::string &overrideName,
 		    {"nameString", license},
 		});
 
-	if (GetNameEntry(result, NameId::Copyright) == "")
+	if (GetNameEntry(result, NameId::Copyright).empty())
 		result.push_back({
 		    {"platformID", Platform::Windows},
 		    {"encodingID", Encoding::Unicode},

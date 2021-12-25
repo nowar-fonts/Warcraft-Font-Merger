@@ -4,4 +4,4 @@
 
 #include <nlohmann/json.hpp>
 
-nlohmann::json MergeNameTable(std::vector<nlohmann::json> &nametables,const std::string &overrideName, const std::string &overrideStyle);
+nlohmann::json MergeNameTable(std::vector<nlohmann::json> &nameTables,const std::string &overrideName, const std::string &overrideStyle);
