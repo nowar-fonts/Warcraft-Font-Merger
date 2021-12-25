@@ -15,22 +15,20 @@
 #include <nowide/fstream.hpp>
 #include <nowide/iostream.hpp>
 
+#include <clipp/clipp.h>
+
 #include "invisible.hpp"
 #include "merge-name.h"
 #include "ps2tt.h"
 #include "tt2ps.h"
 
-const char *usage = reinterpret_cast<const char *>(u8"用法：\n\t%s 1.otd 2.otd [n.otd ...]\n");
-const char *loadfilefail = reinterpret_cast<const char *>(u8"读取文件 %s 失败\n");
-
 using json = nlohmann::json;
 
-std::string LoadFile(char *u8filename) {
+std::string LoadFile(const std::string &u8filename) {
 	static char u8buffer[4096];
 	nowide::ifstream file(u8filename);
 	if (!file) {
-		snprintf(u8buffer, sizeof u8buffer, loadfilefail, u8filename);
-		nowide::cerr << u8buffer << std::endl;
+		nowide::cerr << u8"读取文件 " << u8filename << u8" 失败\n" << std::endl;
 		throw std::runtime_error("failed to load file");
 	}
 	std::string result{std::istreambuf_iterator<char>(file),
@@ -172,12 +170,16 @@ json MergeCodePage(std::vector<json> cpranges) {
 }
 
 int main(int argc, char *u8argv[]) {
-	static char u8buffer[4096];
 	nowide::args _{argc, u8argv};
 
-	if (argc < 3) {
-		snprintf(u8buffer, sizeof u8buffer, usage, u8argv[0]);
-		nowide::cout << u8buffer << std::endl;
+	std::string baseFileName;
+	std::vector<std::string> appendFileNames;
+
+	auto cli = (clipp::value("base.otd", baseFileName),
+	            clipp::repeatable(clipp::value("append.otd", appendFileNames)));
+	if (!clipp::parse(argc, u8argv, cli) || appendFileNames.empty()) {
+		nowide::cout << "用法：" << std::endl
+		             << clipp::usage_lines(cli, "merge-otd") << std::endl;
 		return EXIT_FAILURE;
 	}
 
@@ -187,7 +189,7 @@ int main(int argc, char *u8argv[]) {
 	json base;
 	bool basecff;
 	try {
-		auto s = LoadFile(u8argv[1]);
+		auto s = LoadFile(baseFileName);
 		base = json::parse(s);
 	} catch (const std::runtime_error &) {
 		return EXIT_FAILURE;
@@ -196,12 +198,12 @@ int main(int argc, char *u8argv[]) {
 	RemoveBlankGlyph(base);
 	nametables.push_back(base["name"]);
 
-	for (int argi = 2; argi < argc; argi++) {
+	for (const std::string &name : appendFileNames) {
 		json ext;
 		try {
-			auto s = LoadFile(u8argv[argi]);
+			auto s = LoadFile(name);
 			ext = json::parse(s);
-		} catch (std::runtime_error) {
+		} catch (std::runtime_error &) {
 			return EXIT_FAILURE;
 		}
 		bool extcff = IsPostScriptOutline(ext);
@@ -212,7 +214,7 @@ int main(int argc, char *u8argv[]) {
 		}
 		RemoveBlankGlyph(ext);
 		nametables.push_back(ext["name"]);
-		FixGlyphName(ext, u8argv[argi] + std::string(":"));
+		FixGlyphName(ext, name + std::string(":"));
 		MergeFont(base, ext);
 		if (ext.find("OS_2") != ext.end()) {
 			auto &OS_2 = ext["OS_2"];
@@ -237,7 +239,7 @@ int main(int argc, char *u8argv[]) {
 	base["name"] = MergeNameTable(nametables);
 
 	std::string out = base.dump();
-	FILE *outfile = nowide::fopen(u8argv[1], "wb");
+	FILE *outfile = nowide::fopen(baseFileName.c_str(), "wb");
 	fwrite(out.c_str(), 1, out.size(), outfile);
 	return 0;
 }
