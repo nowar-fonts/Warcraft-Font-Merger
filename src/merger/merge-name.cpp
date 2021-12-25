@@ -385,31 +385,44 @@ pair<string, string> GetLagacyFamilyAndStyle(string family, string style) {
 	return {family + " " + style, "Regular"};
 }
 
-tuple<string, string, string> MergeName(const vector<json> &nametables) {
-	const json &first = nametables[0];
-	string style = GetNameEntry(first, NameId::PreferredSubfamily);
-	if (!style.length())
-		style = GetNameEntry(first, NameId::Subfamily);
-	if (!style.length())
+tuple<string, string, string> MergeName(const vector<json> &nameTables,
+                                        const std::string &overrideFamily,
+                                        const std::string &overrideStyle) {
+	string style = overrideStyle;
+	if (style.empty())
+		style = GetNameEntry(nameTables[0], NameId::PreferredSubfamily);
+	if (style.empty())
+		style = GetNameEntry(nameTables[0], NameId::Subfamily);
+	if (style.empty())
 		style = "Regular";
 
-	string family = GetNameEntry(first, NameId::PreferredFamily);
-	if (!family.length())
-		family = GetNameEntry(first, NameId::Family);
+	// check if override font name is given
+	if (overrideFamily.empty()) {
+		stringstream familyStream, psNameStream;
+		bool isFirst = true;
 
-	string psname = family;
+		for (auto &name : nameTables) {
+			string family = GetNameEntry(name, NameId::PreferredFamily);
+			if (family.empty())
+				family = GetNameEntry(name, NameId::Family);
 
-	for (size_t i = 1; i < nametables.size(); i++) {
-		const json &second = nametables[i];
-		string family2 = GetNameEntry(second, NameId::PreferredFamily);
-		if (!family2.length())
-			family2 = GetNameEntry(second, NameId::Family);
-		family += " + " + family2;
-		psname += "+" + family2;
+			if (!isFirst) {
+				familyStream << " + ";
+				psNameStream << "+";
+			} else {
+				isFirst = false;
+			}
+			familyStream << family;
+			psNameStream << family;
+		}
+
+		string family = familyStream.str();
+		string psName = GeneratePostScriptName(psNameStream.str(), style);
+		return {family, style, psName};
+	} else {
+		return {overrideFamily, style,
+		        GeneratePostScriptName(overrideFamily, style)};
 	}
-
-	psname = GeneratePostScriptName(psname, style);
-	return {family, style, psname};
 }
 
 string MergeCopyright(const vector<json> &nametables) {
@@ -463,10 +476,12 @@ void RemoveRedundantTable(vector<json> &nametables) {
 	}
 }
 
-json MergeNameTable(vector<json> &nametables) {
+json MergeNameTable(vector<json> &nametables, const std::string &overrideName,
+                    const std::string &overrideStyle) {
 	RemoveRedundantTable(nametables);
 
-	auto [family, style, psname] = MergeName(nametables);
+	auto [family, style, psname] =
+	    MergeName(nametables, overrideName, overrideStyle);
 	auto [legacyFamily, legacyStyle] = GetLagacyFamilyAndStyle(family, style);
 	auto [license, licenseUrl] = MergeLicense(nametables);
 	auto copyright = MergeCopyright(nametables);

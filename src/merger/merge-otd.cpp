@@ -174,11 +174,17 @@ int main(int argc, char *u8argv[]) {
 
 	std::string outputPath;
 
+	std::string overrideName, overrideStyle;
+
 	std::string baseFileName;
 	std::vector<std::string> appendFileNames;
 
 	auto cli = (clipp::option("-o", "--output") &
 	                clipp::value("output otd path", outputPath),
+	            clipp::option("-n", "--name") &
+	                clipp::value("override output font name", overrideName),
+	            clipp::option("-s", "--style") &
+	                clipp::value("override output font style", overrideStyle),
 	            clipp::value("base.otd", baseFileName),
 	            clipp::repeatable(clipp::value("append.otd", appendFileNames)));
 	if (!clipp::parse(argc, u8argv, cli) || appendFileNames.empty()) {
@@ -240,7 +246,7 @@ int main(int argc, char *u8argv[]) {
 		OS_2["ulCodePageRange2"] = MergeCodePage(ulCodePageRanges2);
 	}
 
-	base["name"] = MergeNameTable(nametables);
+	base["name"] = MergeNameTable(nametables, overrideName, overrideStyle);
 
 	std::string out = base.dump();
 	FILE *outfile = nowide::fopen(
