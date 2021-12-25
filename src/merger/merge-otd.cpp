@@ -172,10 +172,14 @@ json MergeCodePage(std::vector<json> cpranges) {
 int main(int argc, char *u8argv[]) {
 	nowide::args _{argc, u8argv};
 
+	std::string outputPath;
+
 	std::string baseFileName;
 	std::vector<std::string> appendFileNames;
 
-	auto cli = (clipp::value("base.otd", baseFileName),
+	auto cli = (clipp::option("-o", "--output") &
+	                clipp::value("output otd path", outputPath),
+	            clipp::value("base.otd", baseFileName),
 	            clipp::repeatable(clipp::value("append.otd", appendFileNames)));
 	if (!clipp::parse(argc, u8argv, cli) || appendFileNames.empty()) {
 		nowide::cout << "用法：" << std::endl
@@ -239,7 +243,8 @@ int main(int argc, char *u8argv[]) {
 	base["name"] = MergeNameTable(nametables);
 
 	std::string out = base.dump();
-	FILE *outfile = nowide::fopen(baseFileName.c_str(), "wb");
+	FILE *outfile = nowide::fopen(
+	    outputPath.empty() ? baseFileName.c_str() : outputPath.c_str(), "wb");
 	fwrite(out.c_str(), 1, out.size(), outfile);
 	return 0;
 }
