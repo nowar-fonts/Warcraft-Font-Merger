@@ -24,6 +24,10 @@
 
 using json = nlohmann::json;
 
+inline auto &operator<<(decltype(nowide::cerr) &os, const char8_t *u8str) {
+	return os << reinterpret_cast<const char *>(u8str);
+}
+
 std::string LoadFile(const std::string &u8filename) {
 	static char u8buffer[4096];
 	nowide::ifstream file(u8filename);

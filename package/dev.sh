@@ -7,7 +7,7 @@ cmake . -B build/ \
 	-DCMAKE_BUILD_TYPE="RelWithDebugInfo"
 cmake --build build/ -j$(nproc)
 
-ln -s build/compile_commands.json .
+ln -sf build/compile_commands.json .
 source build/config/config.sh
 VERSION=$VERSION-dev
 
