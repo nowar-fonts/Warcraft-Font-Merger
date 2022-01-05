@@ -36,7 +36,7 @@ void Line(json &quadContour, Point p1)
 		double a = p3.y - p1.y;
 		double b = p1.x - p3.x;
 		double c = p1.y * p3.x - p1.x * p3.y;
-		double distance = abs(a * p2.x + b * p2.y + c) / sqrt(a * a + b * b);
+		double distance = std::abs(a * p2.x + b * p2.y + c) / sqrt(a * a + b * b);
 		if (distance < 1)
 			quadContour.erase(length - 1);
 	}
@@ -84,7 +84,7 @@ void Finish(json &quadContour)
 		double a = p3.y - p1.y;
 		double b = p1.x - p3.x;
 		double c = p1.y * p3.x - p1.x * p3.y;
-		double distance = abs(a * p2.x + b * p2.y + c) / sqrt(a * a + b * b);
+		double distance = std::abs(a * p2.x + b * p2.y + c) / sqrt(a * a + b * b);
 		if (distance < 1)
 			quadContour.erase(0);
 	}
@@ -234,7 +234,7 @@ SegmentQ ProcessSegment(double t1, double t2, Coeff2 coeff)
 	auto normal = [](Point p) { return Point{-p.y, p.x}; };
 
 	double d = f1d * normal(f2d);
-	if (abs(d) < 1e-6)
+	if (std::abs(d) < 1e-6)
 		return {f1, (f1 + f2) / 2, f2};
 	else
 		return {f1, (f1d * (f2 * normal(f2d)) + f2d * (f1 * -normal(f1d))) / d,
@@ -328,7 +328,7 @@ static void ApproximateSimpleSegment(Segment s, json &quadContour, double error)
 static void ApproximateCurve(Segment s, json &quadContour, double error)
 {
 	Solution inflections = SolveInflections(s);
-	if (!inflections.size())
+	if (inflections.empty())
 		return ApproximateSimpleSegment(s, quadContour, error);
 	Segment curve = s;
 	double prev = 0;
