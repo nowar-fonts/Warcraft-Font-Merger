@@ -11,7 +11,93 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: bash build-win64.bash
+    - run: |
+        source ./version.bash
+        VERSION=$VERSION-win64
+        x86_64-w64-mingw32-g++ src/merge-otd.cpp src/merge-name.cpp src/ps2tt.cpp src/tt2ps.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -s -o bin-win64/merge-otd.exe
+
+        mkdir -p release
+        cd release
+
+
+        R=字体合并补全工具-简体中文压缩字库-$VERSION
+
+        mkdir -p $R
+
+        cp ../script-windows/link.url $R/主页-使用说明.url
+        cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+        cp ../script-windows/comp.bat $R/补全.bat
+        cp ../script-windows/merge.bat $R/合并.bat
+        cp ../script-windows/merge+comp.bat $R/合并补全.bat
+        cp ../script-windows/pack-zh.bat $R/打包.bat
+        cp ../font/Nowar-Sans-CJK-XS-Regular.ttf $R/cjk.ttf
+        cp ../font/Nowar-Sans-LCG-Apache-Regular.ttf $R/latin.ttf
+
+        7z a -mx -myx -ms=on WarFontMerger-SC1-$VERSION.7z $R/
+
+
+        R=字体合并补全工具-简体中文标准字库-$VERSION
+
+        mkdir -p $R
+
+        cp ../script-windows/link.url $R/主页-使用说明.url
+        cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+        cp ../script-windows/comp.bat $R/补全.bat
+        cp ../script-windows/merge.bat $R/合并.bat
+        cp ../script-windows/merge+comp.bat $R/合并补全.bat
+        cp ../script-windows/pack-zh.bat $R/打包.bat
+        cp ../font/Nowar-Sans-CJK-CN-Medium.ttf $R/cjk.ttf
+        cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
+
+        7z a -mx -myx -ms=on WarFontMerger-SC2-$VERSION.7z $R/
+
+
+        R=字体合并补全工具-简体中文大字库-$VERSION
+
+        mkdir -p $R
+
+        cp ../script-windows/link.url $R/主页-使用说明.url
+        cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+        cp ../script-windows/comp.bat $R/补全.bat
+        cp ../script-windows/merge.bat $R/合并.bat
+        cp ../script-windows/merge+comp.bat $R/合并补全.bat
+        cp ../script-windows/pack.bat $R/打包.bat
+        cp ../font/Nowar-Sans-CJK-SC-Medium.ttf $R/cjk.ttf
+        cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
+
+        7z a -mx -myx -ms=on WarFontMerger-SC3-$VERSION.7z $R/
+
+
+        R=字型合併補全工具-繁體中文大字庫-$VERSION
+
+        mkdir -p $R
+
+        cp ../script-windows/link.url $R/主頁-使用說明\(簡體\).url
+        cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+        cp ../script-windows/comp.bat $R/補全.bat
+        cp ../script-windows/merge.bat $R/合併.bat
+        cp ../script-windows/merge+comp.bat $R/合併補全.bat
+        cp ../script-windows/pack.bat $R/打包.bat
+        cp ../font/Nowar-Sans-CJK-TC-Medium.ttf $R/cjk.ttf
+        cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
+
+        7z a -mx -myx -ms=on WarFontMerger-TC-$VERSION.7z $R/
+
+
+        R=字型合併補全工具-傳統字形大字庫-$VERSION
+
+        mkdir -p $R
+
+        cp ../script-windows/link.url $R/主頁-使用說明\(簡體\).url
+        cp ../bin-win64/{otfccbuild,otfccdump,merge-otd}.exe $R/
+        cp ../script-windows/comp.bat $R/補全.bat
+        cp ../script-windows/merge.bat $R/合併.bat
+        cp ../script-windows/merge+comp.bat $R/合併補全.bat
+        cp ../script-windows/pack.bat $R/打包.bat
+        cp ../font/Nowar-Sans-CJK-CL-Medium.ttf $R/cjk.ttf
+        cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
+
+        7z a -mx -myx -ms=on WarFontMerger-Classic-$VERSION.7z $R/
     - name: g++
       run: g++ src/merge-otd.cpp src/merge-name.cpp src/ps2tt.cpp src/tt2ps.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -s -o bin-win64/merge-otd.exe
     - name: Upload a Build Artifact
@@ -19,4 +105,4 @@ jobs:
       with:
         # Artifact name
         name: win64
-        path: bin-win64
+        path: release
