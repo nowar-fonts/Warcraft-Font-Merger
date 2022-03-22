@@ -99,5 +99,5 @@ jobs:
       uses: actions/upload-artifact@v3.0.0
       with:
         # Artifact name
-        name: 魔兽世界字体合并/补全工具
+        name: 魔兽世界字体合并补全工具
         path: release
