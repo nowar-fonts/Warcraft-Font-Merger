@@ -18,4 +18,4 @@ jobs:
       with:
         # Artifact name
         name: win64
-        path: /bin-win64
+        path: bin-win64
