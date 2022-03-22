@@ -76,7 +76,7 @@ macOS 下的使用方法和 Windows 稍有不同。
 
 用 GCC 或 Clang
 ```bash
-g++ src/merge-otd.cpp src/merge-name.cpp src/iostream.cpp -Isrc/ -std=c++17 -O2 -o merge-otd
+g++ src/merge-otd.cpp src/merge-name.cpp src/ps2tt.cpp src/tt2ps.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -s -o bin-win64/merge-otd.exe
 ```
 
 或者用 Visual C++
