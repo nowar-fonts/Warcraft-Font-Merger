@@ -14,4 +14,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: make
-      run: g++ src/merge-otd.cpp src/merge-name.cpp src/iostream.cpp -Isrc/ -std=c++17 -O2 -o merge-otd
+      run: g++ src/merge-otd.cpp src/merge-name.cpp src/ps2tt.cpp src/tt2ps.cpp src/iostream.cpp -Isrc/ -std=c++17 -O3 -static -s -o bin-win64/merge-otd.exe
