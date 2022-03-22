@@ -30,9 +30,6 @@ jobs:
         cp ../font/Nowar-Sans-CJK-XS-Regular.ttf $R/cjk.ttf
         cp ../font/Nowar-Sans-LCG-Apache-Regular.ttf $R/latin.ttf
 
-        7z a -mx -myx -ms=on WarFontMerger-SC1-$VERSION.7z $R/
-
-
         R=字体合并补全工具-简体中文标准字库-$VERSION
 
         mkdir -p $R
@@ -45,8 +42,6 @@ jobs:
         cp ../script-windows/pack-zh.bat $R/打包.bat
         cp ../font/Nowar-Sans-CJK-CN-Medium.ttf $R/cjk.ttf
         cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
-
-        7z a -mx -myx -ms=on WarFontMerger-SC2-$VERSION.7z $R/
 
 
         R=字体合并补全工具-简体中文大字库-$VERSION
@@ -62,9 +57,6 @@ jobs:
         cp ../font/Nowar-Sans-CJK-SC-Medium.ttf $R/cjk.ttf
         cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
 
-        7z a -mx -myx -ms=on WarFontMerger-SC3-$VERSION.7z $R/
-
-
         R=字型合併補全工具-繁體中文大字庫-$VERSION
 
         mkdir -p $R
@@ -77,9 +69,6 @@ jobs:
         cp ../script-windows/pack.bat $R/打包.bat
         cp ../font/Nowar-Sans-CJK-TC-Medium.ttf $R/cjk.ttf
         cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
-
-        7z a -mx -myx -ms=on WarFontMerger-TC-$VERSION.7z $R/
-
 
         R=字型合併補全工具-傳統字形大字庫-$VERSION
 
@@ -94,7 +83,6 @@ jobs:
         cp ../font/Nowar-Sans-CJK-CL-Medium.ttf $R/cjk.ttf
         cp ../font/Nowar-Sans-LCG-Medium.ttf $R/latin.ttf
 
-        7z a -mx -myx -ms=on WarFontMerger-Classic-$VERSION.7z $R/
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.0.0
       with:
