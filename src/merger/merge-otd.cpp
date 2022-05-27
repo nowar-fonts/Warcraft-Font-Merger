@@ -9,13 +9,12 @@
 #include <string>
 #include <vector>
 
+#include <clipp/clipp.h>
 #include <nlohmann/json.hpp>
 #include <nowide/args.hpp>
 #include <nowide/cstdio.hpp>
 #include <nowide/fstream.hpp>
 #include <nowide/iostream.hpp>
-
-#include <clipp/clipp.h>
 
 #include "invisible.hpp"
 #include "merge-name.h"
@@ -24,9 +23,13 @@
 
 using json = nlohmann::json;
 
+#if __cpp_char8_t >= 201811L
+
 inline auto &operator<<(decltype(nowide::cerr) &os, const char8_t *u8str) {
 	return os << reinterpret_cast<const char *>(u8str);
 }
+
+#endif
 
 std::string LoadFile(const std::string &u8filename) {
 	static char u8buffer[4096];
@@ -178,19 +181,55 @@ int main(int argc, char *u8argv[]) {
 
 	std::string outputPath;
 
-	std::string overrideName, overrideStyle;
+	std::string overrideNameStyle;
 
 	std::string baseFileName;
 	std::vector<std::string> appendFileNames;
 
-	auto cli = (clipp::option("-o", "--output") &
-	                clipp::value("output otd path", outputPath),
-	            clipp::option("-n", "--name") &
-	                clipp::value("override output font name", overrideName),
-	            clipp::option("-s", "--style") &
-	                clipp::value("override output font style", overrideStyle),
-	            clipp::value("base.otd", baseFileName),
-	            clipp::repeatable(clipp::value("append.otd", appendFileNames)));
+	auto cli =
+	    ((clipp::option("-o", "--output") &
+	      clipp::value("out.otd", outputPath)) %
+	         "输出 otd 文件路径。如果不指定，则覆盖第一个输入 otd 文件。",
+	     (clipp::option("-n", "--name") &
+	      clipp::value("Font Name;Weight;Width;Slope", overrideNameStyle)) %
+	         R"+(指定字体家族名和样式。如果不指定，则自动根据原字体名合成新的名。
+格式："字体名;字重;宽度;倾斜"
+字重的取值范围
+	数字：100 至 950 之间的整数（含两端点）。
+	下列单词（不区分大小写，忽略连字符；括号内的单词视作左边单词的同义词）：
+		Thin       = 100（UltraLight）
+		ExtraLight = 200
+		Light      = 300
+		SemiLight  = 350（DemiLight）
+		Normal     = 372
+		Regular    = 400（Roman、""）
+		Book       = 450
+		Medium     = 500
+		SemiBold   = 600（Demi、DemiBold）
+		Bold       = 700
+		ExtraBold  = 800
+		Black      = 900（Heavy、UltraBold）
+		ExtraBlack = 950
+宽度的取值范围
+	数字：1 至 9 之间的整数（含两端点）。
+	下列单词（不区分大小写，忽略连字符；括号内的单词视作左边单词的同义词）：
+		UltraCondensed = 1
+		ExtraCondensed = 2
+		Condensed      = 3
+		SemiCondensed  = 4
+		Normal         = 5（""）
+		SemiExtended   = 6（SemiExpanded）
+		Extended       = 7（Expanded）
+		ExtraExtended  = 8（ExtraExpanded）
+		UltraExtended  = 9（UltraExpanded）
+倾斜的取值范围
+	下列单词（不区分大小写；括号内的单词视作左边单词的同义词）：
+		Upright（Normal、Roman、Unslanted、""）
+		Italic （Italized）
+		Oblique（Slant）
+)+",
+	     clipp::value("base.otd", baseFileName),
+	     clipp::values("append.otd", appendFileNames));
 	if (!clipp::parse(argc, u8argv, cli) || appendFileNames.empty()) {
 		nowide::cout << "用法：" << std::endl
 		             << clipp::usage_lines(cli, "merge-otd") << std::endl;
@@ -250,7 +289,7 @@ int main(int argc, char *u8argv[]) {
 		OS_2["ulCodePageRange2"] = MergeCodePage(ulCodePageRanges2);
 	}
 
-	base["name"] = MergeNameTable(nametables, overrideName, overrideStyle);
+	MergeNameTable(nametables, base, overrideNameStyle);
 
 	std::string out = base.dump();
 	FILE *outfile = nowide::fopen(

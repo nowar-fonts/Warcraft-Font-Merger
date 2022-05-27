@@ -1,7 +1,10 @@
 #pragma once
 
+#include <string>
+#include <tuple>
 #include <vector>
 
 #include <nlohmann/json.hpp>
 
-nlohmann::json MergeNameTable(std::vector<nlohmann::json> &nameTables,const std::string &overrideName, const std::string &overrideStyle);
+void MergeNameTable(std::vector<nlohmann::json> &nameTables,
+                    nlohmann::json &font, const std::string &overrideNameStyle);

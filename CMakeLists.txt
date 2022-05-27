@@ -4,7 +4,7 @@ include(CheckLibraryExists)
 
 set(WFM_all_VERSION_MAJOR 1)
 set(WFM_all_VERSION_MINOR 0)
-set(WFM_all_VERSION_PATCH 91)
+set(WFM_all_VERSION_PATCH 92)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)

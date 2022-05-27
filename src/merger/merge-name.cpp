@@ -1,8 +1,12 @@
 #include <algorithm>
+#include <cctype>
+#include <cstdio>
 #include <iterator>
 #include <map>
 #include <optional>
+#include <regex>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 #include <utility>
@@ -10,6 +14,7 @@
 #include "merge-name.h"
 
 using namespace std;
+using json = nlohmann::json;
 
 namespace LicenseString {
 const char *Apache =
@@ -46,8 +51,6 @@ const char *GPL = "https://www.gnu.org/copyleft/gpl.html";
 const char *LGPL = "https://www.gnu.org/copyleft/lesser.html";
 const char *OFL = "https://scripts.sil.org/OFL";
 } // namespace LicenseUrlString
-
-using json = nlohmann::json;
 
 struct License {
 	// share alike
@@ -369,7 +372,146 @@ cannot_decide:
 	return {license, {}};
 }
 
-pair<string, string> GetLagacyFamilyAndStyle(const string& family, const string& style) {
+enum Slope : int {
+	Upright = 0,
+	Italic = 1,
+	Oblique = 2,
+};
+
+namespace wwsNameToValue {
+
+const static map<string, int> weight{
+    {"thin", 100},       {"ultralight", 100},
+
+    {"extralight", 200},
+
+    {"light", 300},
+
+    {"semilight", 350},  {"demilight", 350},
+
+    {"normal", 372},
+
+    {"regular", 400},    {"roman", 400},      {"", 400},
+
+    {"book", 450},
+
+    {"medium", 500},
+
+    {"semibold", 600},   {"demi", 600},       {"demibold", 600},
+
+    {"bold", 700},
+
+    {"extrabold", 800},
+
+    {"black", 900},      {"heavy", 900},      {"ultrabold", 900},
+
+    {"extrablack", 950},
+};
+
+const static map<string, int> width{
+    {"ultracondensed", 1},
+
+    {"extracondensed", 2},
+
+    {"condensed", 3},
+
+    {"semicondensed", 4},
+
+    {"normal", 5},         {"", 5},
+
+    {"semiextended", 6},   {"semiexpanded", 6},
+
+    {"extended", 7},       {"expanded", 7},
+
+    {"extraextended", 8},  {"extraexpanded", 8},
+
+    {"ultraextended", 9},  {"ultraexpanded", 9},
+};
+
+const static map<string, Slope> slope{
+    {"upright", Slope::Upright}, {"normal", Slope::Upright},
+    {"roman", Slope::Upright},   {"unslanted", Slope::Upright},
+    {"", Slope::Upright},
+
+    {"italic", Slope::Italic},   {"italized", Slope::Italic},
+
+    {"oblique", Slope::Oblique}, {"slant", Slope::Oblique},
+};
+
+} // namespace wwsNameToValue
+
+inline vector<string> split(string const &str, char delim) {
+	vector<string> result;
+	stringstream s(str);
+	string s2;
+	while (getline(s, s2, delim))
+		result.push_back(s2);
+	return result;
+}
+
+inline string replace_all(string const &source, string from, string to) {
+	return regex_replace(source, std::regex(from), to);
+}
+
+inline string NormalizeStyle(string style) {
+	style = replace_all(style, "[ -]", "");
+	std::transform(style.begin(), style.end(), style.begin(),
+	               [](auto c) { return tolower(c); });
+	return style;
+}
+
+tuple<string, int, int, Slope> ParseWws(string overrideNameStyle) {
+
+	overrideNameStyle = replace_all(overrideNameStyle, "；", ";");
+	overrideNameStyle += ';'; // in case that last field is empty
+	auto fields = split(overrideNameStyle, ';');
+
+	if (fields.size() != 4)
+		throw std::invalid_argument("--name 参数格式错误");
+
+	string family = fields[0];
+	string weight_ = NormalizeStyle(fields[1]),
+	       width_ = NormalizeStyle(fields[2]),
+	       slope_ = NormalizeStyle(fields[3]);
+	int weight;
+	int width;
+	Slope slope;
+
+	try {
+		weight = stoi(weight_);
+		if (weight < 100 || weight > 950)
+			throw std::out_of_range("字重超出范围");
+	} catch (const std::invalid_argument &) {
+		try {
+			weight = wwsNameToValue::weight.at(weight_);
+		} catch (const std::out_of_range &) {
+			throw std::invalid_argument("字重参数无效");
+		}
+	}
+
+	try {
+		width = stoi(width_);
+		if (width < 1 || width > 9)
+			throw std::out_of_range("宽度超出范围");
+	} catch (const std::invalid_argument &) {
+		try {
+			width = wwsNameToValue::width.at(width_);
+		} catch (const std::out_of_range &) {
+			throw std::invalid_argument("宽度参数无效");
+		}
+	}
+
+	try {
+		slope = wwsNameToValue::slope.at(slope_);
+	} catch (const std::out_of_range &) {
+		throw std::invalid_argument("倾斜参数无效");
+	}
+
+	return {family, weight, width, slope};
+}
+
+pair<string, string> GetLagacyFamilyAndStyle(const string &family,
+                                             const string &style) {
 	// 4 standard styles
 	if (style == "Regular" || style == "Italic" || style == "Bold" ||
 	    style == "Bold Italic")
@@ -385,10 +527,9 @@ pair<string, string> GetLagacyFamilyAndStyle(const string& family, const string&
 	return {family + " " + style, "Regular"};
 }
 
-tuple<string, string, string> MergeName(const vector<json> &nameTables,
-                                        const std::string &overrideFamily,
-                                        const std::string &overrideStyle) {
-	string style = overrideStyle;
+tuple<string, string, string> AutoMergeName(const vector<json> &nameTables) {
+	const json &first = nameTables[0];
+	string style = GetNameEntry(first, NameId::PreferredSubfamily);
 	if (style.empty())
 		style = GetNameEntry(nameTables[0], NameId::PreferredSubfamily);
 	if (style.empty())
@@ -396,33 +537,21 @@ tuple<string, string, string> MergeName(const vector<json> &nameTables,
 	if (style.empty())
 		style = "Regular";
 
-	// check if override font name is given
-	if (overrideFamily.empty()) {
-		stringstream familyStream, psNameStream;
-		bool isFirst = true;
+	string family = GetNameEntry(first, NameId::PreferredFamily);
+	if (!family.length())
+		family = GetNameEntry(first, NameId::Family);
 
-		for (auto &name : nameTables) {
-			string family = GetNameEntry(name, NameId::PreferredFamily);
-			if (family.empty())
-				family = GetNameEntry(name, NameId::Family);
-
-			if (!isFirst) {
-				familyStream << " + ";
-				psNameStream << "+";
-			} else {
-				isFirst = false;
-			}
-			familyStream << family;
-			psNameStream << family;
-		}
-
-		string family = familyStream.str();
-		string psName = GeneratePostScriptName(psNameStream.str(), style);
-		return {family, style, psName};
-	} else {
-		return {overrideFamily, style,
-		        GeneratePostScriptName(overrideFamily, style)};
+	for (size_t i = 1; i < nameTables.size(); i++) {
+		const json &second = nameTables[i];
+		string family2 = GetNameEntry(second, NameId::PreferredFamily);
+		if (!family2.length())
+			family2 = GetNameEntry(second, NameId::Family);
+		family += " + " + family2;
 	}
+
+	string psname = GeneratePostScriptName(replace_all(family, " ", ""),
+	                                       replace_all(style, " ", ""));
+	return {family, style, psname};
 }
 
 string MergeCopyright(const vector<json> &nameTables) {
@@ -475,12 +604,9 @@ void RemoveRedundantTable(vector<json> &nameTables) {
 	}
 }
 
-json MergeNameTable(vector<json> &nameTables, const std::string &overrideName,
-                    const std::string &overrideStyle) {
-	RemoveRedundantTable(nameTables);
+json AutoMergeNameTable(vector<json> &nameTables) {
 
-	auto [family, style, psName] =
-	    MergeName(nameTables, overrideName, overrideStyle);
+	auto [family, style, psName] = AutoMergeName(nameTables);
 	auto [legacyFamily, legacyStyle] = GetLagacyFamilyAndStyle(family, style);
 	auto [license, licenseUrl] = MergeLicense(nameTables);
 	auto copyright = MergeCopyright(nameTables);
@@ -543,4 +669,205 @@ json MergeNameTable(vector<json> &nameTables, const std::string &overrideName,
 		});
 
 	return result;
+}
+
+namespace wwsValueToName {
+
+const static map<int, string> weight{
+    {100, "Thin"},       {200, "ExtraLight"}, {300, "Light"},
+    {350, "SemiLight"},  {372, "Normal"},     {400, ""},
+    {450, "Book"},       {500, "Medium"},     {600, "SemiBold"},
+    {700, "Bold"},       {800, "ExtraBold"},  {900, "Black"},
+    {950, "ExtraBlack"},
+};
+
+const static map<int, string> width{
+    {1, "UltraCondensed"},
+    {2, "ExtraCondensed"},
+    {3, "Condensed"},
+    {4, "SemiCondensed"},
+    {5, ""},
+    {6, "SemiExtended"},
+    {7, "Extended"},
+    {8, "ExtraExtended"},
+    {9, "UltraExtended"},
+};
+
+const static map<Slope, string> slope{
+    {Slope::Upright, ""},
+    {Slope::Italic, "Italic"},
+    {Slope::Oblique, "Oblique"},
+};
+
+} // namespace wwsValueToName
+
+string join(const vector<string> &strs, const string &delim) {
+	string result;
+	for (auto it = strs.begin(); it != strs.end(); it++) {
+		result += *it;
+		if (it != strs.end() - 1)
+			result += delim;
+	}
+	return result;
+}
+
+tuple<string, string, string, string> GenerateWwsName(string family, int weight,
+                                                      int width, Slope slope) {
+
+	vector<string> typoSubfamily;
+	vector<string> legacyFamilyAppend;
+	vector<string> legacySubfamily;
+
+	{
+		string width_ = wwsValueToName::width.at(width);
+		if (width_.length()) {
+			typoSubfamily.push_back(width_);
+			legacyFamilyAppend.push_back(width_);
+		}
+	}
+
+	switch (weight) {
+	case 400:
+		break;
+	case 700:
+		typoSubfamily.emplace_back("Bold");
+		legacySubfamily.emplace_back("Bold");
+		break;
+	default:
+		string weight_;
+		try {
+			weight_ = wwsValueToName::weight.at(weight);
+		} catch (const out_of_range &) {
+			char buffer[16];
+			snprintf(buffer, sizeof buffer, "W%d", weight);
+			weight_ = buffer;
+		}
+		typoSubfamily.push_back(weight_);
+		legacyFamilyAppend.push_back(weight_);
+	}
+
+	switch (slope) {
+	case Slope::Upright:
+		break;
+	case Slope::Italic:
+		typoSubfamily.emplace_back("Italic");
+		legacySubfamily.emplace_back("Italic");
+		break;
+	case Slope::Oblique:
+		typoSubfamily.emplace_back("Oblique");
+		legacyFamilyAppend.emplace_back("Oblique");
+		break;
+	}
+
+	return {
+	    typoSubfamily.size() ? join(typoSubfamily, " ") : "Regular",
+	    legacyFamilyAppend.size() ? family + ' ' + join(legacyFamilyAppend, " ")
+	                              : family,
+	    legacySubfamily.size() ? join(legacySubfamily, " ") : "Regular",
+	    GeneratePostScriptName(replace_all(family, " ", ""),
+	                           typoSubfamily.size() ? join(typoSubfamily, "")
+	                                                : "Regular"),
+	};
+}
+
+void MergeNameTable(vector<json> &nameTables, json &font,
+                    const std::string &overrideNameStyle) {
+
+	RemoveRedundantTable(nameTables);
+
+	if (overrideNameStyle.empty()) {
+		font["name"] = AutoMergeNameTable(nameTables);
+		return;
+	}
+
+	auto [family, weight, width, slope] = ParseWws(overrideNameStyle);
+
+	auto [style, legacyFamily, legacyStyle, psName] =
+	    GenerateWwsName(family, weight, width, slope);
+	auto [license, licenseUrl] = MergeLicense(nameTables);
+	auto copyright = MergeCopyright(nameTables);
+	auto version = GetNameEntry(nameTables[0], NameId::Version);
+
+	json result = nameTables[0];
+	for (auto &entry : result) {
+		switch (NameId(entry["nameID"])) {
+		case NameId::Copyright:
+			entry["nameString"] = copyright;
+			break;
+		case NameId::Family:
+			entry["nameString"] = legacyFamily;
+			break;
+		case NameId::Subfamily:
+			entry["nameString"] = legacyStyle;
+			break;
+		case NameId::UniqueIdentifier:
+			entry["nameString"] = family + " " + style + " " + version;
+			break;
+		case NameId::FullName:
+			entry["nameString"] = family + " " + style;
+			break;
+		case NameId::PostScript:
+			entry["nameString"] = psName;
+			break;
+		case NameId::LicenseDescription:
+			entry["nameString"] = license;
+			break;
+		case NameId::LicenseUrl:
+			entry["nameString"] = licenseUrl;
+			break;
+		case NameId::PreferredFamily:
+			entry["nameString"] = family;
+			break;
+		case NameId::PreferredSubfamily:
+			entry["nameString"] = style;
+			break;
+		default:
+			break;
+		}
+	}
+
+#define SetNameEntry(entry, value)                                             \
+	({                                                                         \
+		if (GetNameEntry(result, NameId::entry).empty())                       \
+			result.push_back({                                                 \
+			    {"platformID", Platform::Windows},                             \
+			    {"encodingID", Encoding::Unicode},                             \
+			    {"languageID", Language::en_US},                               \
+			    {"nameID", NameId::entry},                                     \
+			    {"nameString", value},                                         \
+			});                                                                \
+	})
+
+	SetNameEntry(Family, legacyFamily);
+	SetNameEntry(Subfamily, legacyStyle);
+	SetNameEntry(PreferredFamily, family);
+	SetNameEntry(PreferredSubfamily, style);
+
+	SetNameEntry(LicenseDescription, license);
+	SetNameEntry(Copyright, copyright);
+
+#undef SetNameEntry
+
+	font["name"] = result;
+
+	if (font.find("head") != font.end()) {
+		auto &head = font["head"];
+		auto &macStyle = head["macStyle"];
+		macStyle["bold"] = (weight == 700);
+		macStyle["italic"] = (slope == Slope::Italic);
+	}
+
+	if (font.find("OS_2") != font.end()) {
+		auto &os_2 = font["OS_2"];
+		os_2["usWeightClass"] = weight;
+		os_2["usWidthClass"] = width;
+
+		auto &fsSelection = os_2["fsSelection"];
+		fsSelection["regular"] =
+		    (weight == 400 && width == 5 && slope == Slope::Upright);
+		fsSelection["bold"] = (weight == 700);
+		fsSelection["italic"] = (slope == Slope::Italic);
+		fsSelection["oblique"] = (slope == Slope::Oblique);
+		fsSelection["wws"] = true;
+	}
 }
