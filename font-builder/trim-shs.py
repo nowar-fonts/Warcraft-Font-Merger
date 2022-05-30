@@ -14,14 +14,14 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 0,
-			"nameString": "Copyright © 2018—2019 Cyano Hao, with reserved font name “Nowar”, “有爱”, and “有愛”. Portions © 2014, 2015, 2018 Adobe (http://www.adobe.com/)."
+			"nameString": "Copyright © 2018—2019 Cyano Hao. Portions © 2014, 2015, 2018 Adobe (http://www.adobe.com/)."
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 1,
-			"nameString": "Nowar Sans CJK {}".format(region) if isStdStyle else "Nowar Sans CJK {} {}".format(region, weight)
+			"nameString": "WFM Sans CJK {}".format(region) if isStdStyle else "WFM Sans CJK {} {}".format(region, weight)
 		},
 		{
 			"platformID": 3,
@@ -35,14 +35,14 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 3,
-			"nameString": "Nowar Sans CJK {} {} {}".format(region, weight, version)
+			"nameString": "WFM Sans CJK {} {} {}".format(region, weight, version)
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 4,
-			"nameString": "Nowar Sans CJK {} {}".format(region, weight)
+			"nameString": "WFM Sans CJK {} {}".format(region, weight)
 		},
 		{
 			"platformID": 3,
@@ -56,14 +56,14 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 6,
-			"nameString": "Nowar-Sans-CJK-{}-{}".format(region, weight.replace(' ', '-'))
+			"nameString": "WFM-Sans-CJK-{}-{}".format(region, weight.replace(' ', '-'))
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 8,
-			"nameString": "Cyano Hao"
+			"nameString": "Nowar Typeface"
 		},
 		{
 			"platformID": 3,
@@ -77,7 +77,7 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 11,
-			"nameString": "https://github.com/CyanoHao"
+			"nameString": "https://github.com/nowar-fonts"
 		},
 		{
 			"platformID": 3,
@@ -98,7 +98,7 @@ def NameFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 16,
-			"nameString": "Nowar Sans CJK {}".format(region)
+			"nameString": "WFM Sans CJK {}".format(region)
 		},
 		{
 			"platformID": 3,
@@ -142,5 +142,5 @@ if __name__ == '__main__':
 	TrimGlyph(baseFont)
 
 	outStr = json.dumps(baseFont, ensure_ascii=False)
-	with open("out/Nowar-Sans-CJK-{}-{}.otd".format(region, weight), 'w') as outFile:
+	with open("out/WFM-Sans-CJK-{}-{}.otd".format(region, weight), 'w') as outFile:
 		outFile.write(outStr)

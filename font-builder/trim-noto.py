@@ -7,21 +7,21 @@ def NameFont(font, weight, version):
 
 	isStdStyle = weight == 'Regular' or weight == 'Bold'
 
-	font['OS_2']['achVendID'] = 'Cyan'
+	font['OS_2']['achVendID'] = 'NOWR'
 	font['name'] = [
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 0,
-			"nameString": "Copyright © 2018—2019 Cyano Hao, with reserved font name “Nowar”, “有爱”, and “有愛”. Portions Copyright 2015 Google Inc."
+			"nameString": "Copyright © 2018—2019 Cyano Hao. Portions Copyright 2015 Google Inc."
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 1,
-			"nameString": "Nowar Sans LCG" if isStdStyle else "Nowar Sans LCG " + weight
+			"nameString": "WFM Sans LCG" if isStdStyle else "WFM Sans LCG " + weight
 		},
 		{
 			"platformID": 3,
@@ -35,14 +35,14 @@ def NameFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 3,
-			"nameString": "Nowar Sans LCG " + weight + ' ' + str(version)
+			"nameString": "WFM Sans LCG " + weight + ' ' + str(version)
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 4,
-			"nameString": "Nowar Sans LCG " + weight
+			"nameString": "WFM Sans LCG " + weight
 		},
 		{
 			"platformID": 3,
@@ -56,14 +56,14 @@ def NameFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 6,
-			"nameString": "Nowar-Sans-LCG-" + weight.replace(' ', '-')
+			"nameString": "WFM-Sans-LCG-" + weight.replace(' ', '-')
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 8,
-			"nameString": "Cyano Hao"
+			"nameString": "Nowar Typeface"
 		},
 		{
 			"platformID": 3,
@@ -77,7 +77,7 @@ def NameFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 11,
-			"nameString": "https://github.com/CyanoHao"
+			"nameString": "https://github.com/nowar-fonts"
 		},
 		{
 			"platformID": 3,
@@ -98,7 +98,7 @@ def NameFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 16,
-			"nameString": "Nowar Sans LCG"
+			"nameString": "WFM Sans LCG"
 		},
 		{
 			"platformID": 3,
@@ -129,5 +129,5 @@ if __name__ == '__main__':
 	TrimGlyph(baseFont)
 
 	outStr = json.dumps(baseFont, ensure_ascii=False)
-	with open("out/Nowar-Sans-LCG-{}.otd".format(weight), 'w') as outFile:
+	with open("out/WFM-Sans-LCG-{}.otd".format(weight), 'w') as outFile:
 		outFile.write(outStr)

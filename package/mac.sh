@@ -20,32 +20,20 @@ export _url_extension="url"
 export _script_extension="command"
 export _binary_suffix=""
 
-_Dist="字体合并补全工具-简体中文压缩字库-$VERSION" \
-_dist="WarFontMerger-SC1-$VERSION" \
-_cjk="Nowar-Sans-CJK-XS-Regular" \
-_latin="Nowar-Sans-LCG-Apache-Regular" \
+_Dist="字体合并补全工具-压缩字库-$VERSION" \
+_dist="WarFontMerger-XS-$VERSION" \
+_cjk="WFM-Sans-CJK-XS-Regular" \
+_latin="WFM-Sans-LCG-Apache-Regular" \
 package_sc
 
-_Dist="字体合并补全工具-简体中文标准字库-$VERSION" \
-_dist="WarFontMerger-SC2-$VERSION" \
-_cjk="Nowar-Sans-CJK-CN-Medium" \
-_latin="Nowar-Sans-LCG-Medium" \
+_Dist="字体合并补全工具-简体中文-$VERSION" \
+_dist="WarFontMerger-SC-$VERSION" \
+_cjk="WFM-Sans-CJK-SC-Medium" \
+_latin="WFM-Sans-LCG-Medium" \
 package_sc
 
-_Dist="字体合并补全工具-简体中文大字库-$VERSION" \
-_dist="WarFontMerger-SC3-$VERSION" \
-_cjk="Nowar-Sans-CJK-SC-Medium" \
-_latin="Nowar-Sans-LCG-Medium" \
-package_sc
-
-_Dist="字型合併補全工具-繁體中文大字庫-$VERSION" \
-_dist="WarFontMerger-TC-$VERSION" \
-_cjk="Nowar-Sans-CJK-TC-Medium" \
-_latin="Nowar-Sans-LCG-Medium" \
-package_tc
-
-_Dist="字型合併補全工具-傳統字形大字庫-$VERSION" \
-_dist="WarFontMerger-Classic-$VERSION" \
-_cjk="Nowar-Sans-CJK-CL-Medium" \
-_latin="Nowar-Sans-LCG-Medium" \
+_Dist="字型合併補全工具-傳統字形-$VERSION" \
+_dist="WarFontMerger-CL-$VERSION" \
+_cjk="WFM-Sans-CJK-CL-Medium" \
+_latin="WFM-Sans-LCG-Medium" \
 package_tc

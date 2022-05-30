@@ -51,8 +51,6 @@ def Transform(glyph, a, b, c, d, dx, dy, roundToInt = False):
 
 RegionSubfamilyMap = {
 	'XS': "Compressed",
-	'CN': "GB18030",
-	'SC': "CN",
-	'TC': "TW",
+	'SC': "SC",
 	'CL': "Classic",
 }

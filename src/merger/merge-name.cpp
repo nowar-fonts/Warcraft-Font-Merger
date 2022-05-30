@@ -510,7 +510,7 @@ tuple<string, int, int, Slope> ParseWws(string overrideNameStyle) {
 	return {family, weight, width, slope};
 }
 
-pair<string, string> GetLagacyFamilyAndStyle(const string &family,
+pair<string, string> GetLegacyFamilyAndStyle(const string &family,
                                              const string &style) {
 	// 4 standard styles
 	if (style == "Regular" || style == "Italic" || style == "Bold" ||
@@ -563,7 +563,7 @@ string MergeCopyright(const vector<json> &nameTables) {
 
 void RemoveRedundantTable(vector<json> &nameTables) {
 	vector<string> names;
-	size_t nowarlcg = -1;
+	size_t wfmLcg = -1;
 	for (size_t i = 0; i < nameTables.size();) {
 		const json &table = nameTables[i];
 		string family = GetNameEntry(table, NameId::PreferredFamily);
@@ -573,26 +573,26 @@ void RemoveRedundantTable(vector<json> &nameTables) {
 			nameTables.erase(nameTables.begin() + i);
 		} else {
 			names.push_back(family);
-			if (family == "Nowar Sans LCG")
-				nowarlcg = i;
+			if (family == "WFM Sans LCG")
+				wfmLcg = i;
 			i++;
 		}
 	}
 
-	// Nowar Sans LCG + Nowar Sans CJK
-	if (nowarlcg != size_t(-1)) {
+	// WFM Sans LCG + WFM Sans CJK
+	if (wfmLcg != size_t(-1)) {
 		bool hasCJK = false;
 		for (auto &table : nameTables) {
 			string family = GetNameEntry(table, NameId::PreferredFamily);
 			if (family.length() >= 14 &&
-			    family.substr(0, 14) == "Nowar Sans CJK") {
+			    family.substr(0, 12) == "WFM Sans CJK") {
 				hasCJK = true;
 				for (auto &entry : table)
 					switch (NameId(entry["nameID"])) {
 					case NameId::Family:
 					case NameId::PreferredFamily:
 						entry["nameString"] =
-						    string(entry["nameString"]).replace(10, 4, "");
+						    string(entry["nameString"]).replace(8, 4, "");
 						break;
 					default:
 						break;
@@ -600,14 +600,14 @@ void RemoveRedundantTable(vector<json> &nameTables) {
 			}
 		}
 		if (hasCJK)
-			nameTables.erase(nameTables.begin() + nowarlcg);
+			nameTables.erase(nameTables.begin() + wfmLcg);
 	}
 }
 
 json AutoMergeNameTable(vector<json> &nameTables) {
 
 	auto [family, style, psName] = AutoMergeName(nameTables);
-	auto [legacyFamily, legacyStyle] = GetLagacyFamilyAndStyle(family, style);
+	auto [legacyFamily, legacyStyle] = GetLegacyFamilyAndStyle(family, style);
 	auto [license, licenseUrl] = MergeLicense(nameTables);
 	auto copyright = MergeCopyright(nameTables);
 	auto version = GetNameEntry(nameTables[0], NameId::Version);

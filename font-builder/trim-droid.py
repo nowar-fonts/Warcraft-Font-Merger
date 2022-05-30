@@ -7,7 +7,7 @@ from common import TrimGlyph, CopyRef, Transform
 def NameLatinFont(font, weight, version):
 	isStdStyle = weight == 'Regular' or weight == 'Bold'
 
-	font['OS_2']['achVendID'] = 'Cyan'
+	font['OS_2']['achVendID'] = 'NOWR'
 
 	font['name'] = [
 		{
@@ -15,14 +15,14 @@ def NameLatinFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 0,
-			"nameString": "Copyright © 2018—2019 Cyano Hao, with reserved font name “Nowar”, “有爱”, and “有愛”. Portions copyright © 2007, Google Corporation."
+			"nameString": "Copyright © 2018—2022 Cyano Hao. Portions copyright © 2007, Google Corporation."
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 1,
-			"nameString": "Nowar Sans LCG" if isStdStyle else "Nowar Sans LCG " + weight
+			"nameString": "WFM Sans LCG" if isStdStyle else "WFM Sans LCG " + weight
 		},
 		{
 			"platformID": 3,
@@ -36,14 +36,14 @@ def NameLatinFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 3,
-			"nameString": "Nowar Sans LCG " + weight + ' ' + str(version)
+			"nameString": "WFM Sans LCG " + weight + ' ' + str(version)
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 4,
-			"nameString": "Nowar Sans LCG " + weight
+			"nameString": "WFM Sans LCG " + weight
 		},
 		{
 			"platformID": 3,
@@ -57,14 +57,14 @@ def NameLatinFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 6,
-			"nameString": "Nowar-Sans-LCG-" + weight.replace(' ', '-')
+			"nameString": "WFM-Sans-LCG-" + weight.replace(' ', '-')
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 8,
-			"nameString": "Cyano Hao"
+			"nameString": "Nowar Typeface"
 		},
 		{
 			"platformID": 3,
@@ -78,7 +78,7 @@ def NameLatinFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 11,
-			"nameString": "https://github.com/CyanoHao"
+			"nameString": "https://github.com/nowar-fonts"
 		},
 		{
 			"platformID": 3,
@@ -99,7 +99,7 @@ def NameLatinFont(font, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 16,
-			"nameString": "Nowar Sans LCG"
+			"nameString": "WFM Sans LCG"
 		},
 		{
 			"platformID": 3,
@@ -113,7 +113,7 @@ def NameLatinFont(font, weight, version):
 def NameAsianFont(font, region, weight, version):
 	isStdStyle = weight == 'Regular' or weight == 'Bold'
 
-	font['OS_2']['achVendID'] = 'Cyan'
+	font['OS_2']['achVendID'] = 'NOWR'
 
 	font['name'] = [
 		{
@@ -121,14 +121,14 @@ def NameAsianFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 0,
-			"nameString": "Copyright © 2018—2019 Cyano Hao, with reserved font name “Nowar”, “有爱”, and “有愛”. Portions (c) Google Corporation 2006."
+			"nameString": "Copyright © 2018—2019 Cyano Hao. Portions (c) Google Corporation 2006."
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 1,
-			"nameString": "Nowar Sans CJK {}".format(region) if isStdStyle else "Nowar Sans CJK {} {}".format(region, weight)
+			"nameString": "WFM Sans CJK {}".format(region) if isStdStyle else "WFM Sans CJK {} {}".format(region, weight)
 		},
 		{
 			"platformID": 3,
@@ -142,14 +142,14 @@ def NameAsianFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 3,
-			"nameString": "Nowar Sans CJK {} {} {}".format(region, weight, version)
+			"nameString": "WFM Sans CJK {} {} {}".format(region, weight, version)
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 4,
-			"nameString": "Nowar Sans CJK {} {}".format(region, weight)
+			"nameString": "WFM Sans CJK {} {}".format(region, weight)
 		},
 		{
 			"platformID": 3,
@@ -163,14 +163,14 @@ def NameAsianFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 6,
-			"nameString": "Nowar-Sans-CJK-{}-{}".format(region, weight.replace(' ', '-'))
+			"nameString": "WFM-Sans-CJK-{}-{}".format(region, weight.replace(' ', '-'))
 		},
 		{
 			"platformID": 3,
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 8,
-			"nameString": "Cyano Hao"
+			"nameString": "Nowar Typeface"
 		},
 		{
 			"platformID": 3,
@@ -184,7 +184,7 @@ def NameAsianFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 11,
-			"nameString": "https://github.com/CyanoHao"
+			"nameString": "https://github.com/nowar-fonts"
 		},
 		{
 			"platformID": 3,
@@ -205,7 +205,7 @@ def NameAsianFont(font, region, weight, version):
 			"encodingID": 1,
 			"languageID": 1033,
 			"nameID": 16,
-			"nameString": "Nowar Sans CJK {}".format(region)
+			"nameString": "WFM Sans CJK {}".format(region)
 		},
 		{
 			"platformID": 3,
@@ -232,14 +232,13 @@ if __name__ == '__main__':
 		if str(u) in latinFont['cmap']:
 			del latinFont['cmap'][str(u)]
 
-	with open("src/DroidSansFallbackLegacy.otd", 'rb') as latinExtFile:
+	with open("src/DroidSansFallbackWoWG.otd", 'rb') as latinExtFile:
 		latinExtFont = json.loads(latinExtFile.read().decode('UTF-8', errors='replace'))
-		asianExtFont = copy.deepcopy(latinExtFont)
 
 	for n, g in latinExtFont['glyf'].items():
 		Transform(g, 8, 0, 0, 8, 0, 0)
 
-	with open("src/DroidSansFallbackFull.otd", 'rb') as asianFile:
+	with open("src/DroidSansFallbackWoWG.otd", 'rb') as asianFile:
 		asianFont = json.loads(asianFile.read().decode('UTF-8', errors='replace'))
 
 	asianFont['OS_2']['ulCodePageRange1'] = { "gbk": True }
@@ -255,13 +254,6 @@ if __name__ == '__main__':
 				if n not in latinFont['glyf']:
 					latinFont['glyf'][n] = latinExtFont['glyf'][n]
 					CopyRef(latinFont['glyf'][n], latinFont, latinExtFont)
-		# Asian symbol
-		elif int(u) < 0x3000:
-			if u not in asianFont['cmap']:
-				asianFont['cmap'][u] = asianExtFont['cmap'][u]
-				if n not in asianFont['glyf']:
-					asianFont['glyf'][n] = asianExtFont['glyf'][n]
-					CopyRef(asianFont['glyf'][n], asianFont, asianExtFont)
 
 	for u in latinFont['cmap']:
 		if u in asianFont['cmap']:
@@ -273,9 +265,9 @@ if __name__ == '__main__':
 	TrimGlyph(asianFont)
 
 	latinOutStr = json.dumps(latinFont, ensure_ascii=False)
-	with open("out/Nowar-Sans-LCG-Apache-Regular.otd", 'w') as latinOutFile:
+	with open("out/WFM-Sans-LCG-Apache-Regular.otd", 'w') as latinOutFile:
 		latinOutFile.write(latinOutStr)
 
 	asianOutStr = json.dumps(asianFont, ensure_ascii=False)
-	with open("out/Nowar-Sans-CJK-XS-Regular.otd", 'w') as asianOutFile:
+	with open("out/WFM-Sans-CJK-XS-Regular.otd", 'w') as asianOutFile:
 		asianOutFile.write(asianOutStr)
