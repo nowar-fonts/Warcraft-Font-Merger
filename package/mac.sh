@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cmake . -B build/ \
 	-DCMAKE_BUILD_TYPE="Release" \
 	-DCMAKE_INTERPROCEDURAL_OPTIMIZATION:BOOL="ON" \

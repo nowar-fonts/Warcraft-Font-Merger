@@ -10,5 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - run: bash package/linux.sh
+      - uses: actions/checkout@v3
+      - run: |
+          package/dev.sh
