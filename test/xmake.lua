@@ -1,0 +1,1 @@
+includes("sfnt/xmake.lua")

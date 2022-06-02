@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include <clipp/clipp.h>
+#include <clipp.h>
 #include <nlohmann/json.hpp>
 #include <nowide/args.hpp>
 #include <nowide/cstdio.hpp>

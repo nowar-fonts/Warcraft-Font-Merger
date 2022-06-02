@@ -7,7 +7,7 @@ set(WFM_all_VERSION_MINOR 1)
 set(WFM_all_VERSION_PATCH 0)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 configure_file(
 	config/config.h.in
@@ -26,22 +26,22 @@ include_directories(
 	"${PROJECT_SOURCE_DIR}/src/otfcc"
 )
 
-file(GLOB_RECURSE src_otfcc src/otfcc/**.c)
-file(GLOB_RECURSE src_otfcc_extern src/otfcc-extern/**.c)
+file(GLOB_RECURSE src_otfcc src/otfcc/**.cpp)
+file(GLOB_RECURSE src_otfcc_extern src/otfcc-extern/**.cpp)
 
 
 add_executable(otfccdump
 	${src_otfcc}
 	${src_otfcc_extern}
-	src/otfcc-driver/otfccdump.c
-	src/otfcc-driver/stopwatch.c
+	src/otfcc-driver/otfccdump.cpp
+	src/otfcc-driver/stopwatch.cpp
 )
 
 add_executable(otfccbuild
 	${src_otfcc}
 	${src_otfcc_extern}
-	src/otfcc-driver/otfccbuild.c
-	src/otfcc-driver/stopwatch.c
+	src/otfcc-driver/otfccbuild.cpp
+	src/otfcc-driver/stopwatch.cpp
 )
 
 add_executable(merge-otd
