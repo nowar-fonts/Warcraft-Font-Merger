@@ -82,7 +82,14 @@ macOS 和 Linux 上的使用方法和 Windows 稍有不同。
 
 ## 限制
 
-* 不提供预编译的 32 位版本。WFM 不可避免地需要操纵汉字，而汉字是一个非常庞大的集合，读取并操作汉字需要巨大的内存，32 位程序极易因为超出内存上限而崩溃。
+* 不提供预编译的 32 位版本。
+  * 32 位操作系统一般不能满足 WFM 的内存需求。
+  * 64 位操作系统上运行 32 位 WFM，也极易超出单一进程的 4 GiB 内存限制。
+  * 对于 Windows ARM64，WFM 提供原生版本，不再需要 32 位版本进行兼容。
+  * 现在仍然提供 Windows x86 的打包脚本，但将来可能彻底移除 32 位支持。
+* 暂不支持多线程。
+  * otfcc 原本作为开发工具，可以通过多任务方式来充分利用多核处理器。
+  * 今后会逐步支持，但没有明确的时间表。
 
 ## 编译和运行
 
@@ -93,6 +100,8 @@ cmake . -B build/ -DCMAKE_BUILD_TYPE="Release"
 cmake --build build/ -j<N>
 ```
 
+如果要发布自己的修改版本，请参考 [package/](package/) 下的说明文档和相关脚本。
+
 ### 运行
 
 合并两个字体：
@@ -101,6 +110,16 @@ export PATH="$PWD/build:$PATH"
 otfccdump 西文字体.ttf -o base.otd
 otfccdump 中文字体.ttf -o cjk.otd
 merge-otd base.otd cjk.otd
+otfccbuild base.otd -O2 -o 合并之后的字体.ttf
+rm *.otd
+```
+
+合并时也可以指定字体名（直接运行 `merge-otd` 查看参数说明）：
+```bash
+export PATH="$PWD/build:$PATH"
+otfccdump 西文字体.ttf -o base.otd
+otfccdump 中文字体.ttf -o cjk.otd
+merge-otd -n "我的字体;Bold;Extended;Italic" base.otd cjk.otd
 otfccbuild base.otd -O2 -o 合并之后的字体.ttf
 rm *.otd
 ```
@@ -135,10 +154,12 @@ rm *.otd
 
 ## 感谢
 
-[Belleve Invis](https://github.com/be5invis) 和[李阿玲](https://github.com/clerkma)编写的 [otfcc](https://github.com/caryll/otfcc) 用于解析和生成 OpenType 字体文件。
+本项目中用于解析和生成 OpenType 字体文件的 otfcc 程序来自 [caryll/otfcc](https://github.com/caryll/otfcc)。
 
-[Niels Lohmann](https://github.com/nlohmann) 的 [json](https://github.com/nlohmann/json) 库提供了非常漂亮的 C++ JSON 接口。本工具使用了修改版的 `json.hpp`，容许非标准编码的字符。
+[Niels Lohmann](https://github.com/nlohmann) 的 [json](https://github.com/nlohmann/json) 库提供了非常漂亮的 C++ JSON 接口。本项目使用了修改版的 `json.hpp`，容许非标准编码的字符。
 
 TrueType 和 PostScript 曲线相互转换的算法来自 [AFDKO](https://github.com/adobe-type-tools/afdko) 和 [Fontello](https://github.com/fontello/cubic2quad)。这两个算法有[配合 otfcc 使用的独立版本](https://github.com/nowar-fonts/otfcc-quad2cubic)，可用于 OpenType/TT 和 OpenType/CFF 字体的相互转换。
 
 Google 提供了大量的开源字体，Adobe 提供了高质量的[思源黑体](https://github.com/adobe-fonts/source-han-sans)。
+
+本项目还使用了 [Boost.Nowide](https://github.com/boostorg/nowide)、[clipp](https://github.com/muellan/clipp) 来提供跨平台的命令行体验。
