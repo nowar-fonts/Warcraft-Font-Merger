@@ -2,6 +2,8 @@
 
 set -e
 
+export PATH="/opt/aarch64-w64-mingw32/bin:$PATH"
+
 cmake . -B build/ \
 	-DCMAKE_BUILD_TYPE="Release" \
 	-DCMAKE_INTERPROCEDURAL_OPTIMIZATION:BOOL="ON" \
