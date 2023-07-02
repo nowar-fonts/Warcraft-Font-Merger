@@ -10,10 +10,10 @@ WFMは以下の64bitオペレーティングプラットフォームをサポー
 
 | ランニングプラットフォーム | ランタイム | 備考 |
 | -------- | ---------- | ---- |
-| `windows-x64` — Windows x64 | なし（`msvcrt.dll`のリンク先）| Intel、AMD、メガコアプロセッサ |
-| `windows-arm64` — Windows ARM64 | なし(`ucrtbase.dll`のリンク先）| Qualcomm、Microsoft SQ<i>x</i>、その他の ARMv8 プロセッサ |
+| `windows-x64` — Windows x64 | なし (`msvcrt.dll`のリンク先)| Intel、AMD、メガコアプロセッサ |
+| `windows-arm64` — Windows ARM64 | なし (`ucrtbase.dll`のリンク先)| Qualcomm、Microsoft SQ<i>x</i>、その他の ARMv8 プロセッサ |
 | `mac` — macOS | macOS 10.15 またはそれ以降 | 汎用バイナリファイル |
-| `linux-amd64` — Linux x86-64 | なし(musl 静的リンク)| その他の64bitアーキテクチャについては「コンパイルと実行」のセクションを参照 |
+| `linux-amd64` — Linux x86-64 | なし (musl 静的リンク)| その他の64bitアーキテクチャについては「コンパイルと実行」のセクションを参照 |
 
 WFM には以下の自己完結型のフォントバージョンがあります：
 
@@ -23,7 +23,7 @@ WFM には以下の自己完結型のフォントバージョンがあります�
 | `SC` — 簡体中国語 | GB18030 + 韓国語のハングル文字 | **推奨** |
 | `CL` — 伝統的なグリフ | GB18030 + 韓国語のハングル文字 | 従来のタイポグラフィに近いフォントを使用 |
 
-## クイックスタート（Windows）
+## クイックスタート(Windows)
 
 ### 2種類のフォントを統合して完成
 
@@ -48,7 +48,7 @@ WFMのフォルダーを開き`Complement.bat` を実行し`out.ttf`のフォン
 
 WFMのフォルダーを開き `Packing.bat` を実行して作成をした `Fonts` フォルダーを `World of Warcraft\_retail_\` の下に移動します。
 
-## クイックスタート（macOS と Linux）
+## クイックスタート(macOS と Linux)
 
 ### 未署名のWFMをmacOS上で実行可能にする
 
@@ -88,7 +88,7 @@ macOS と Linux の使い方は Windows とは少し異なります。
   * Windows ARM64 では、WFM をネイティブとして実行ができるようになったので 32bit 版を必要としなくなりました
   * Windows x86 用のパッケージスクリプトはまだ利用可能ですが、後に廃止を検討しています。
 * マルチスレッドは、現時点ではサポートしていません。
-  * OTCFCC は元々、マルチタスクによってマルチコアプロセッサを最大限に活用するための開発ツールとして開発をした物です。
+  * otcfcc は元々、マルチタスクによってマルチコアプロセッサを最大限に活用するための開発ツールとして開発をしていた物です。
   * 将来的には徐々に様々なサポートをしていく予定ですが、明確なスケジュールが定まっていません。
 
 ## コンパイルと実行
@@ -104,7 +104,7 @@ cmake --build build/ -j<N>
 
 ### 実行
 
-2つのフォントを統合：
+2つのフォントを統合 :
 ```bash
 export PATH="$PWD/build:$PATH"
 otfccdump 西文字体.ttf -o base.otd
@@ -124,7 +124,7 @@ otfccbuild base.otd -O2 -o 合并之后的字体.ttf
 rm *.otd
 ```
 
-文字が欠落しているフォントを補完する：
+文字が欠落しているフォントを補完する :
 ```bash
 export PATH="$PWD/build:$PATH"
 otfccdump 需要补全的字体.ttf -o base.otd
